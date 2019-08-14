@@ -1,0 +1,43 @@
+{
+  "name": "pm2-offline-installer",
+  "version": "1.0.0",
+  "description": "Install pm2 offline",
+  "scripts": {
+    "bundle": "run-script-os",
+    "bundle:windows": "src\\scripts\\windows\\bundle.bat",
+    "bundle:linux:darwin": "bash ./src/scripts/unix/bundle.sh",
+    "bundle:default": "echo 'ERROR: Could not detect host platform'",
+    "setup": "run-script-os",
+    "setup:windows": "src\\scripts\\windows\\setup.bat",
+    "setup:linux:darwin": "bash ./src/scripts/unix/setup.sh",
+    "setup:default": "echo 'ERROR: Could not detect host platform'",
+    "remove": "run-script-os",
+    "remove:windows": "src\\scripts\\windows\\remove.bat",
+    "remove:linux:darwin": "bash ./src/scripts/unix/remove.sh",
+    "remove:default": "echo 'ERROR: Could not detect host platform'",
+    "bundle_unix": "bash ./src/scripts/unix/bundle.sh",
+    "setup_unix": "bash ./src/scripts/unix/setup.sh",
+    "remove_unix": "bash ./src/scripts/unix/remove.sh",
+    "bundle_windows": "src\\scripts\\windows\\bundle.bat",
+    "setup_windows": "src\\scripts\\windows\\setup.bat",
+    "remove_windows": "src\\scripts\\windows\\remove.bat"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jessety/pm2-offline-installer.git"
+  },
+  "keywords": [
+    "pm2",
+    "offline",
+    "install"
+  ],
+  "author": "Jesse Youngblood",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jessety/pm2-offline-installer/issues"
+  },
+  "homepage": "https://github.com/jessety/pm2-offline-installer#readme",
+  "dependencies": {
+    "run-script-os": "^1.0.7"
+  }
+}

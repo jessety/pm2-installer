@@ -1,0 +1,6 @@
+node_modules
+*.env
+*.swp
+**/.DS_Store
+.npm_cache
+bundle.json
