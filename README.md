@@ -1,6 +1,6 @@
 # pm2-offline-installer
 
-> Install pm2 globally offline on Windows or Linux
+> Install pm2 globally offline on Windows, Linux, or Darwin
 
 Do you need to install pm2 on a machine without internet access? You're in the right place.
 
