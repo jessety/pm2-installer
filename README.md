@@ -10,8 +10,7 @@ This project downloads `pm2` on an internet-connected build machine, then expand
 
 On an internet-connected build machine of the same OS as the deployment target, run the following:
 
-```bash 
-$ npm install
+```bash
 $ npm run bundle
 ```
 
