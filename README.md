@@ -8,7 +8,7 @@ This project downloads `pm2` on an internet-connected build machine, then expand
 
 ## Setup
 
-On an internet-connected build machine, run the following:
+On an internet-connected build machine of the same OS as the deployment target, run the following:
 
 ```bash 
 $ npm install
