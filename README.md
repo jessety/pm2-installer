@@ -4,6 +4,8 @@
 
 This project aims to automate installation of pm2 as a service, particularly on Windows. It is largely based on [this excellent gist](https://gist.github.com/maxfierke/a85ba9d717d6e121405c).
 
+## Details
+
 There are a couple issues that make automated deployment of pm2 service installations difficult on Windows:
 
 - Unlike on Linux, `pm2` has no built-in startup script support for Windows
