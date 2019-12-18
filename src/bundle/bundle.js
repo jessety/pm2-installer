@@ -76,7 +76,7 @@ function describe(bundle) {
 async function compare(bundle) {
 
   if (bundle === undefined) {
-    console.error(`${colors.red('✘')} Install bundle appears invalid.`);
+    console.error(`${colors.red('×')} Offline install bundle appears invalid.`);
     return;
   }
 
@@ -107,14 +107,13 @@ async function compare(bundle) {
 
   if (bundle.package.version !== version || bundle.node !== node || bundle.npm !== npm) {
 
-    console.error(`${colors.red('ERROR')}: Bundle does not match the version of the ${name}, node, or npm. This will likely cause installation to fail. Please ensure bundle is created with the same version as the installation target.`);
+    console.error(`${colors.red('ERROR')}: Bundle does not match the version of the ${name}, node, or npm. This may cause bundled installation to fail. Please ensure bundle is created with the same version as the installation target.`);
 
-    console.error(`${colors.red('✘')} Install bundle appears invalid.`);
+    console.error(`${colors.red('×')} Offline install bundle appears invalid.`);
 
   } else {
 
-    // console.log(`Install bundle valid. \n${bundle.name} ${bundle.version} \nnode    ${node} \nnpm     ${npm}`);
-    console.log(`${colors.green('✓︎')} Install bundle appears valid.`);
+    console.log(`${colors.green('√')} Offline install bundle appears valid.`);
   }
 }
 
@@ -148,8 +147,8 @@ async function read() {
 
   } catch (error) {
 
-    console.error(`${colors.red('ERROR')}: Bundle info file either not found or corrupt. This likely means offline installation will fail. If internet access is available, this isn't an issue. For offline installation, please ensure the package is bundled with it's dependencies prior to being transferred to the installation target`);
-    console.error(`Bundle info file (${path}) error: ${error.message}`);
+    console.warn(`${colors.yellow('WARNING')}: Bundle info file either not found or corrupt. If internet access is available, this is not an issue. For offline installation, please ensure this package is bundled with it's dependencies prior to being transferred to the installation target.`);
+    // console.warn(`Bundle info file (${path}) error: ${error.message}`);
   }
 }
 
