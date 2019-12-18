@@ -14,6 +14,11 @@ if (Test-Path $cache_folder) {
 # Create a new npm cache folder
 New-Item -ItemType Directory -Name $cache_folder | Out-Null
 
+Write-Host "Temporarily uninstalling global dependencies.."
+npm uninstall --global --loglevel=error "pm2"
+npm uninstall --global --loglevel=error "@innomizetech/pm2-windows-service"
+npm uninstall --global --loglevel=error "pm2-logrotate"
+
 Write-Host "Populating cache with all global dependencies.."
 npm install --global --force --cache $cache_folder --shrinkwrap false --loglevel=error $pm2_package
 npm install --global --force --cache $cache_folder --shrinkwrap false --loglevel=error $pm2_service_package
