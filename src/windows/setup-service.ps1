@@ -2,7 +2,7 @@
 # From: https://gist.github.com/mauron85/e55b3b9d722f91366c50fddf2fca07a4
 
 param(
-	[string] $Directory = $env:PM2_HOME
+	[string] $Directory = "C:\ProgramData\pm2"
 )
 
 Write-Host "=== Creating Service ==="
@@ -86,6 +86,13 @@ function Set-Npm-Folder-Permissions
 
 function Install-Pm2-Service
 {
+
+	# node-windows creates services with the current working directory
+	# pm2-service-install doesn't currently allow manually specifying the working directory when it invokes node-windows
+	# However, if we just cd into the correct place before creating the service, it's almost good enough
+
+	$wd = (Get-Item -Path '.\' -Verbose).FullName
+
 	cd $Directory
 
 	Write-Host "Running pm2-service-install.."
@@ -100,6 +107,9 @@ function Install-Pm2-Service
 		Write-Debug "PM2 service wrapper log file does not exist. Creating.."
 		Out-File $wrapperLogPath -Encoding utf8
 	}
+
+	# Return back where we came from
+	cd $wd
 }
 
 # From http://stackoverflow.com/a/4370900/964356
@@ -140,7 +150,7 @@ function Change-Pm2-Service-Account
 	Set-ServiceAcctCreds -serviceName "pm2.exe" -newAcct "NT AUTHORITY\LocalService" -newPass "" | Out-Null
 }
 
-$env:PM2_HOME =  $Directory
+$env:PM2_HOME = $Directory
 $env:PM2_SERVICE_PM2_DIR = "$(npm config get prefix)\node_modules\pm2\index.js"
 # $env:PM2_SERVICE_SCRIPTS = " $Directory\ecosystem.json"
 

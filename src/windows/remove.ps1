@@ -1,18 +1,14 @@
 Write-Host "=== Remove ==="
 
-$pm2_package = "pm2";
-$pm2_service_package = "@innomizetech/pm2-windows-service";
-$pm2_logrotate_package = "pm2-logrotate";
+# Remove the service, and reset associated environmental variables
+& .\src\windows\remove-service.ps1
 
-Write-Host "Killing pm2 process"
-pm2 kill
+# Uninstall packages
+& .\src\windows\remove-packages.ps1
 
-Write-Host "Removing pm2 service"
-pm2-service-uninstall
-
-Write-Host "Uninstalling pm2"
-npm uninstall --global $pm2_package --loglevel=error
-npm uninstall --global $pm2_service_package --loglevel=error
-npm uninstall --global $pm2_logrotate_package --loglevel=error
+# Revert npm configuration
+# This is now broken out into it's own script and not a part of the setup process
+# Therefore, it isn't a part of the standard removal process either
+# & .\src\windows\configure-remove.ps1
 
 Write-Host "=== Remove Complete ==="

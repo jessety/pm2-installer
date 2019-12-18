@@ -4,14 +4,32 @@
   "description": "Install pm2 globally offline as a service on Windows or Unix",
   "scripts": {
     "preinstall": "echo 'Installing this package is not necessary. Run \"npm setup\" to install pm2.'",
+    "print-host": "node ./src/bundle/current.js",
+    "print-config": "PowerShell -NoProfile -ExecutionPolicy Bypass src\\windows\\configure-print.ps1",
+
     "bundle": "node ./src/script-for-os.js",
     "bundle:windows": "PowerShell -NoProfile -ExecutionPolicy Bypass src\\windows\\bundle.ps1",
     "bundle:unix": "bash ./src/unix/bundle.sh",
     "bundle:default": "echo 'ERROR: Could not detect host platform'",
+
+    "unbundle": "node ./src/script-for-os.js",
+    "unbundle:windows": "PowerShell -NoProfile -ExecutionPolicy Bypass src\\windows\\unbundle.ps1",
+    "unbundle:unix": "bash ./src/unix/unbundle.sh",
+    "unbundle:default": "echo 'ERROR: Could not detect host platform'",
+
+    "configure": "node ./src/script-for-os.js",
+    "configure:windows": "PowerShell -NoProfile -ExecutionPolicy Bypass src\\windows\\configure-setup.ps1",
+    "configure:default": "echo 'Altering npm configuration not necessecary for this platform.';",
+
+    "deconfigure": "node ./src/script-for-os.js",
+    "deconfigure:windows": "PowerShell -NoProfile -ExecutionPolicy Bypass src\\windows\\configure-remove.ps1",
+    "deconfigure:default": "echo 'Altering npm configuration not necessecary for this platform.';",
+
     "setup": "node ./src/script-for-os.js",
     "setup:windows": "PowerShell -NoProfile -ExecutionPolicy Bypass src\\windows\\setup.ps1",
     "setup:unix": "bash ./src/unix/setup.sh",
     "setup:default": "echo 'ERROR: Could not detect host platform'",
+
     "remove": "node ./src/script-for-os.js",
     "remove:windows": "PowerShell -NoProfile -ExecutionPolicy Bypass src\\windows\\remove.ps1",
     "remove:unix": "bash ./src/unix/remove.sh",

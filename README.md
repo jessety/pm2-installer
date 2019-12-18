@@ -32,6 +32,13 @@ Copy the entire `pm2-installer` directory onto the target machine, then run:
 npm run setup
 ```
 
+On Windows, the `setup` script assumes you have already configured `npm` to use `prefix` and `cache` directories in a location accessible to the `LocalService` user. To do this automatically, run `configure` first:
+
+```bash
+npm run configure
+npm run setup
+```
+
 That's it.
 
 ## Offline Setup
@@ -61,6 +68,12 @@ npm run remove
 ```
 
 This will remove the service and completely uninstall pm2.
+
+If you used the `configure` script to configure `npm`, you can revert those settings by running:
+
+```bash
+npm run deconfigure
+```
 
 ## License
 

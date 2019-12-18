@@ -1,4 +1,4 @@
-Write-Host "=== Install ==="
+Write-Host "=== Install Packages ==="
 
 $pm2_package = "$(node src/echo-dependency.js pm2)"
 $pm2_service_package = "$(node src/echo-dependency.js pm2-windows-service)";
@@ -30,4 +30,12 @@ if (Test-Path $cache_folder) {
   npm install --global --loglevel=error $pm2_logrotate_package
 }
 
-Write-Host "=== Install Complete ==="
+# Enable execution of pm2's powershell script, so the current user can interact with pm2
+$script_path = "$(npm config get prefix)\pm2.ps1"
+if (Test-Path $script_path) {
+
+  Write-Host "Unblocking script at $script_path.."
+  Unblock-File -Path $script_path
+}
+
+Write-Host "=== Install Packages Complete ==="

@@ -4,11 +4,11 @@ param(
 
 Write-Host "=== Configuring npm to use $Directory ==="
 
-$Directory_npm = "$Directory\npm"
+$Directory_prefix = "$Directory\npm"
 $Directory_modules = "$Directory\npm\node_modules"
 $Directory_cache = "$Directory\npm-cache"
 
-function Create-NPM-Directories {
+function Create-Directories {
 
   if (Test-Path $Directory) {
     Write-Host "Directory $Directory already exists, no need to create it."
@@ -17,11 +17,11 @@ function Create-NPM-Directories {
 	  New-Item -ItemType Directory -Force -Path $Directory | Out-Null
   }
 
-  if (Test-Path $Directory_npm) {
-    Write-Host "Directory $Directory_npm already exists, no need to create it."
+  if (Test-Path $Directory_prefix) {
+    Write-Host "Directory $Directory_prefix already exists, no need to create it."
   } else {
-    Write-Host "Creating $Directory_npm"
-	  New-Item -ItemType Directory -Force -Path $Directory_npm | Out-Null
+    Write-Host "Creating $Directory_prefix"
+	  New-Item -ItemType Directory -Force -Path $Directory_prefix | Out-Null
   }
 
   if (Test-Path $Directory_modules) {
@@ -40,14 +40,24 @@ function Create-NPM-Directories {
 }
 
 function Set-NPM-Config {
-  
-  Write-Host "Setting npm prefix to $Directory_npm"
 
-  npm config --global set prefix $Directory_npm
+  $currentPrefix = "$(npm config --global get prefix)"
 
-  Write-Host "Setting npm cache to $Directory_cache"
-  
-  npm config --global set cache $Directory_cache
+  if ((Join-Path $currentPrefix '') -eq (Join-Path $Directory_prefix '')) {
+    Write-Host "npm prefix config is already set to $Directory_prefix, no need to update it."
+  } else {
+    Write-Host "Changing npm prefix config from $currentPrefix to $Directory_prefix"
+    npm config --global set prefix $Directory_prefix
+  }
+
+  $currentCache = "$(npm config --global get cache)"
+
+  if ((Join-Path $currentCache '') -eq (Join-Path $Directory_cache '')) {
+    Write-Host "npm cache config is already set to $Directory_cache, no need to update it."
+  } else {
+    Write-Host "Changing npm cache config from $currentCache to $Directory_cache"
+    npm config --global set cache $Directory_cache
+  }
 }
 
 function Update-Path {
@@ -55,8 +65,6 @@ function Update-Path {
   param(
 	  [string] $NewPath
   )
-
-  Write-Host "Updating path.."
 
   $Paths = [Environment]::GetEnvironmentVariable('Path', [EnvironmentVariableTarget]::Machine) -split ';'
 
@@ -77,8 +85,8 @@ function Update-Path {
   }
 }
 
-Create-NPM-Directories
+Create-Directories
 Set-NPM-Config
-Update-Path($Directory_npm)
+Update-Path($Directory_prefix)
 
 Write-Host "=== Configuring npm Complete ==="

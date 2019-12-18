@@ -1,20 +1,24 @@
 Write-Host "=== Setup ==="
 
-# Configure npm to use a global location accessible to all users instead of the current user's AppData directory
-PowerShell -NoProfile -ExecutionPolicy Bypass .\src\windows\setup-npm.ps1 -Directory C:\ProgramData\npm
+# Check the npm configuration to ensure the prefix isn't in the current user's appdata folder
+$continue = &".\src\windows\configure-check.ps1" | select -Last 1
 
-# Update the path, because that last command changed it
-$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+if ($continue -eq 'n') {
+  Write-Host "=== Setup Canceled ==="
+  exit
+}
 
-# Install pm2 globally. Use local offline install bundle if possible, but fallback to online installation if necessary
-PowerShell -NoProfile -ExecutionPolicy Bypass .\src\windows\setup-install.ps1
+# Install all required npm packages
+# Use local offline install bundle if possible, but fallback to online installation
+& .\src\windows\setup-packages.ps1
 
 # Install service that runs pm2
-PowerShell -NoProfile -ExecutionPolicy Bypass .\src\windows\setup-service.ps1 -Directory C:\ProgramData\pm2
+& .\src\windows\setup-service.ps1
 
 # Add the logrotate module
-cd "$(npm config get prefix)\node_modules\pm2-logrotate\"
-pm2 install . --silent
-pm2 save --force
+& .\src\windows\setup-logrotate.ps1
 
-Write-Host "=== Setup Complete ==="
+Write-Host "`nTo interact with pm2, close this window and start a new terminal session."
+Write-Host "Alternatively, update your PM2_HOME env variable in this session by executing:`n  `$Env:PM2_HOME=`"$Env:PM2_HOME`"`n"
+
+Write-Host "=== Setup Complete ===`n"
