@@ -1,5 +1,8 @@
 Write-Host "=== Setup ==="
 
+# Load the latest path
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+
 # Check the npm configuration to ensure the prefix isn't in the current user's appdata folder
 $continue = &".\src\windows\configure-check.ps1" | select -Last 1
 
