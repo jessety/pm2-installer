@@ -21,6 +21,10 @@
     "configure:windows": "PowerShell -NoProfile -ExecutionPolicy Bypass src\\windows\\configure-setup.ps1",
     "configure:default": "echo 'Altering npm configuration not necessecary for this platform.';",
 
+    "configure-policy": "node ./src/script-for-os.js",
+    "configure-policy:windows": "PowerShell -NoProfile -ExecutionPolicy Bypass src\\windows\\configure-policy-shell.ps1",
+    "configure-policy:default": "echo 'Altering PowerShell execution policy not necessecary for this platform.';",
+
     "deconfigure": "node ./src/script-for-os.js",
     "deconfigure:windows": "PowerShell -NoProfile -ExecutionPolicy Bypass src\\windows\\configure-remove.ps1",
     "deconfigure:default": "echo 'Altering npm configuration not necessecary for this platform.';",
