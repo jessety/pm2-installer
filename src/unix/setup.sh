@@ -17,10 +17,10 @@ if [ -d $cache_folder ]; then
   node src/bundle/compare.js
 
   echo 'Cache detected, installing offline..'
-  npm --offline --cache ./.npm_cache --optional --cache-min 99999999999 cache verify
+  npm --offline --cache ./.npm_cache --optional cache verify
 
-  npm install --global --offline --cache $cache_folder --cache-min 99999999999 --shrinkwrap false --loglevel=error $pm2_package
-  npm install --global --offline --cache $cache_folder --cache-min 99999999999 --shrinkwrap false --loglevel=error $pm2_logrotate_package
+  npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error $pm2_package
+  npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error $pm2_logrotate_package
 
 else
   echo 'Cache not detected, installing online..'

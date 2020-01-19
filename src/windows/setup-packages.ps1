@@ -15,11 +15,11 @@ if (Test-Path $cache_folder) {
 
   Write-Host "Cache detected, installing offline.."
 
-  npm --offline --cache $cache_folder --optional --cache-min 99999999999 cache verify
+  npm --offline --cache $cache_folder --optional cache verify
 
-  npm install --global --offline --cache $cache_folder --cache-min 99999999999 --shrinkwrap false --loglevel=error $pm2_package
-  npm install --global --offline --cache $cache_folder --cache-min 99999999999 --shrinkwrap false --loglevel=error $pm2_service_package
-  npm install --global --offline --cache $cache_folder --cache-min 99999999999 --shrinkwrap false --loglevel=error $pm2_logrotate_package
+  npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error $pm2_package
+  npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error $pm2_service_package
+  npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error $pm2_logrotate_package
 
 } else {
   
