@@ -51,7 +51,7 @@ On an internet-connected build machine of the same OS as the deployment target, 
 npm run bundle
 ```
 
-This will install pm2 globally, and save the resources required to do so into the project's directory. Transfer the entire `pm2-installer` directory onto the deployment target, then run:
+This will install pm2 locally, and save the resources required to do so into the project's directory. Transfer the entire `pm2-installer` directory onto the deployment target, then run:
 
 ```bash
 npm run setup
