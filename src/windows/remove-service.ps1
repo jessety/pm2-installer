@@ -2,7 +2,6 @@ Write-Host "=== Remove Service ==="
 
 if (Get-Command "pm2" -ErrorAction SilentlyContinue) {
   Write-Host "Deleting all pm2 processes.."
-  pm2 delete all --silent
   pm2 uninstall pm2-logrotate --silent
   pm2 save --force --silent
 } else {
