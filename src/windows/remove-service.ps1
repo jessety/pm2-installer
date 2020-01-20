@@ -1,5 +1,14 @@
 Write-Host "=== Remove Service ==="
 
+if (Get-Command "pm2" -ErrorAction SilentlyContinue) {
+  Write-Host "Deleting all pm2 processes.."
+  pm2 delete all --silent
+  pm2 uninstall pm2-logrotate --silent
+  pm2 save --force --silent
+} else {
+  Write-Host "Command pm2 not found, potentially because it has already been uninstalled."
+}
+
 $command = "pm2-service-uninstall"
 
 if (Get-Command $command -ErrorAction SilentlyContinue) {
