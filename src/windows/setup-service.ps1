@@ -5,18 +5,23 @@ param(
 	[string] $Directory = "C:\ProgramData\pm2"
 )
 
+$ErrorActionPreference = "Stop"
+
 Write-Host "=== Creating Service ==="
 Write-Host "Using PM2_HOME directory: $Directory"
 
-$ErrorActionPreference = "Stop"
+# Query for the name of the Local Service user by its security identifier
+# https://support.microsoft.com/en-us/help/243330/well-known-security-identifiers-in-windows-operating-systems
+$localServiceSID = New-Object System.Security.Principal.SecurityIdentifier("S-1-5-19")
+$User = ($localServiceSID.Translate([System.Security.Principal.NTAccount])).Value
 
 function Create-Pm2-Home
 {
-	Write-Host "Attempting to create $Directory and give FullControl to LOCAL SERVICE"
+	Write-Host "Attempting to create $Directory and give FullControl to $User"
 	New-Item -ItemType Directory -Force -Path  $Directory | Out-Null
 
 	$rule = New-Object System.Security.AccessControl.FileSystemAccessRule(
-		"LOCAL SERVICE", "FullControl", "ContainerInherit, ObjectInherit",
+		$User, "FullControl", "ContainerInherit, ObjectInherit",
 		"None", "Allow")
 
 	try {
@@ -32,11 +37,11 @@ function Create-Pm2-Home
 function Set-Daemon-Permissions
 {
 	$daemonPath = "$(npm config get prefix)\node_modules\@innomizetech\pm2-windows-service\src\daemon"
-	Write-Host "Attempting to create $daemonPath and give FullControl to LOCAL SERVICE"
+	Write-Host "Attempting to create $daemonPath and give FullControl to $User"
 	New-Item -ItemType Directory -Force -Path $daemonPath | Out-Null
 
 	$rule = New-Object System.Security.AccessControl.FileSystemAccessRule(
-		"LOCAL SERVICE", "FullControl", "ContainerInherit, ObjectInherit",
+		$User, "FullControl", "ContainerInherit, ObjectInherit",
 		"None", "Allow")
 
 	try {
@@ -52,10 +57,10 @@ function Set-Daemon-Permissions
 function Set-Npm-Folder-Permissions
 {
 	$path = "$(npm config get prefix)"
-	Write-Host "Attempting to give FullControl of $path to LOCAL SERVICE"
+	Write-Host "Attempting to give FullControl of $path to $User"
 
 	$rule = New-Object System.Security.AccessControl.FileSystemAccessRule(
-		"LOCAL SERVICE", "FullControl", "ContainerInherit, ObjectInherit",
+		$User, "FullControl", "ContainerInherit, ObjectInherit",
 		"None", "Allow")
 
 	try {
@@ -68,10 +73,10 @@ function Set-Npm-Folder-Permissions
 	}
 
 	$path = "$(npm config get cache)"
-	Write-Host "Attempting to give FullControl of $path to LOCAL SERVICE"
+	Write-Host "Attempting to give FullControl of $path to $User"
 
 	$rule = New-Object System.Security.AccessControl.FileSystemAccessRule(
-		"LOCAL SERVICE", "FullControl", "ContainerInherit, ObjectInherit",
+		$User, "FullControl", "ContainerInherit, ObjectInherit",
 		"None", "Allow")
 
 	try {
@@ -146,8 +151,8 @@ function Set-ServiceAcctCreds
 
 function Change-Pm2-Service-Account
 {
-	Write-Host "Changing PM2 to run as LOCAL SERVICE"
-	Set-ServiceAcctCreds -serviceName "pm2.exe" -newAcct "NT AUTHORITY\LocalService" -newPass "" | Out-Null
+	Write-Host "Changing PM2 to run as $User"
+	Set-ServiceAcctCreds -serviceName "pm2.exe" -newAcct "$User" -newPass "" | Out-Null
 }
 
 $env:PM2_HOME = $Directory
