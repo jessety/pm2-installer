@@ -1,6 +1,6 @@
 {
   "name": "pm2-installer",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "Install pm2 globally offline as a service on Windows or Unix",
   "scripts": {
     "preinstall": "echo 'Installing this package is not necessary. Run \"npm run setup\" to install pm2.'",
