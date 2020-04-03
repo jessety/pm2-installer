@@ -19,13 +19,13 @@ if [ -d $cache_folder ]; then
   echo 'Cache detected, installing offline..'
   npm --offline --cache ./.npm_cache --optional cache verify
 
-  npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error $pm2_package
-  npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error $pm2_logrotate_package
+  npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error --audit=false $pm2_package
+  npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error --audit=false $pm2_logrotate_package
 
 else
   echo 'Cache not detected, installing online..'
-  npm install --global --loglevel=error $pm2_package
-  npm install --global --loglevel=error $pm2_logrotate_package
+  npm install --global --loglevel=error --audit=false $pm2_package
+  npm install --global --loglevel=error --audit=false $pm2_logrotate_package
 fi
 
 # Run pm2 on startup
