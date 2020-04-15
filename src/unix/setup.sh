@@ -6,18 +6,25 @@ echo '=== Setup ==='
 pm2_package=$(node src/echo-dependency.js pm2)
 pm2_logrotate_package=$(node src/echo-dependency.js pm2-logrotate)
 cache_folder="./.npm_cache";
+cache_archive="./bundle.tar.gz"
 
 # Print out the versions of this package, node, and npm for this host
 node src/bundle/current.js
 
-echo ' * Installing pm2'
-if [ -d $cache_folder ]; then
+if [ $cache_archive ]; then
+
+  echo 'Cache detected, installing offline..'
+
+  # Remove existing cache directory
+  rm -rf $cache_folder
+
+  # Extract the archive to create a new cache directory
+  tar -xf $cache_archive
 
   # Read the bundle information file and compare it to the current host
   node src/bundle/compare.js
 
-  echo 'Cache detected, installing offline..'
-  npm --offline --cache ./.npm_cache --optional cache verify
+  npm --offline --cache $cache_folder --optional cache verify
 
   npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error --audit=false $pm2_package
   npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error --audit=false $pm2_logrotate_package
