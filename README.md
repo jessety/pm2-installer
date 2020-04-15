@@ -1,12 +1,12 @@
 # pm2-installer
 
-> Automate installing pm2 as a service on Windows, Linux, or Darwin
+`pm2-installer` is designed to automate installation of pm2 as a service, particularly on Windows, even in environments without Internet access.
 
-This project aims to automate installation of pm2 as a service, particularly on Windows. It is largely based on [this excellent gist](https://gist.github.com/maxfierke/a85ba9d717d6e121405c).
+### Windows Support
 
-## Details
+Setup on Windows is largely based on [this excellent gist](https://gist.github.com/maxfierke/a85ba9d717d6e121405c).
 
-There are a couple issues that make automated deployment of pm2 service installations difficult on Windows:
+There are a couple issues that make automated deployment of a pm2 service difficult on Windows:
 
 - Unlike on Linux, `pm2` has no built-in startup script support for Windows
 - The `npm` directory must be accessible to the Local Service user
@@ -22,9 +22,11 @@ When running on Windows, `pm2-installer` will do the following:
 - Leverage a fork of `pm2-windows-service` to create a pm2 Windows service that will persist across reboots
 - Install the `pm2-logrotate` module so that log files don't fill up the disk
 
-After that, `pm2` will be installed as a service. To add your app, run `pm2 start app.js` from an admin command line interface. Make sure to run `pm2 save` afterwards as well, and it'll be persisted across reboots and user logouts.
+After that, `pm2` will be installed as a service. It will persist across reboots and continue running regardless of which user is logged in. To add your app, run `pm2 start app.js` from an admin command line interface. Make sure to run `pm2 save` to serialize the process list.
 
-## Setup
+## Install
+
+Download the latest version [here](https://github.com/jessety/pm2-installer/archive/master.zip).
 
 Copy the entire `pm2-installer` directory onto the target machine, then run:
 
@@ -41,7 +43,7 @@ npm run setup
 
 That's it.
 
-## Offline Setup
+## Offline Install
 
 `pm2-installer` is also designed to function without an internet connection. It does this by installing `pm2` on an internet-connected build machine to create a cache, then installing from cache when run on the deployment machine.
 
@@ -57,7 +59,7 @@ This will install pm2 locally, and save the resources required to do so into the
 npm run setup
 ```
 
-`pm2-installer` will automatically detect the resources required to install without an internet connection and use them. Otherwise, it will download them from the npm registry.
+`pm2-installer` will automatically detect the resources required to install without an internet connection and use them. Otherwise, it will attempt to download them from the npm registry.
 
 ## Removal
 
@@ -69,7 +71,7 @@ npm run remove
 
 This will remove the service and completely uninstall pm2.
 
-If you used the `configure` script to configure `npm`, you can revert those settings by running:
+If you used the `configure` script on Windows to configure `npm`, you can revert those settings by running:
 
 ```bash
 npm run deconfigure
