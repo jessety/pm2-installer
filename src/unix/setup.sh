@@ -11,7 +11,7 @@ cache_archive="./bundle.tar.gz"
 # Print out the versions of this package, node, and npm for this host
 node src/bundle/current.js
 
-if [ $cache_archive ]; then
+if [ -f $cache_archive ]; then
 
   echo 'Cache detected, installing offline..'
 
