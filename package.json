@@ -1,7 +1,9 @@
 {
   "name": "pm2-installer",
-  "version": "2.0.7",
-  "description": "Install pm2 globally offline as a service on Windows or Unix",
+  "version": "2.0.8",
+  "description": "Install pm2 offline as a service on Windows or Linux",
+  "license": "MIT",
+  "author": "Jesse Youngblood",
   "scripts": {
     "preinstall": "echo 'Installing this package is not necessary. Run \"npm run setup\" to install pm2.'",
     "print-host": "node ./src/bundle/current.js",
@@ -39,8 +41,6 @@
     "remove:unix": "bash ./src/unix/remove.sh",
     "remove:default": "echo 'ERROR: Could not detect host platform'"
   },
-  "author": "Jesse Youngblood",
-  "license": "MIT",
   "dependencies": {
     "@innomizetech/pm2-windows-service": "^1.1.1",
     "pm2": "^4.2.3",
