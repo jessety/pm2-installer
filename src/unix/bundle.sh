@@ -13,8 +13,8 @@ mkdir -p $cache_folder
 rm -rf $cache_archive
 
 echo 'Populating cache with all dependencies..'
-npm install --global-style --force --cache $cache_folder --loglevel=error $pm2_package
-npm install --global-style --force --cache $cache_folder --loglevel=error $pm2_logrotate_package
+npm install --global-style --force --cache $cache_folder --loglevel=error --audit=false --no-fund $pm2_package
+npm install --global-style --force --cache $cache_folder --loglevel=error --audit=false --no-fund $pm2_logrotate_package
 
 echo 'Removing local npm_modules folder..'
 rm -rf node_modules

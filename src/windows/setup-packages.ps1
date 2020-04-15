@@ -17,17 +17,17 @@ if (Test-Path $cache_folder) {
 
   npm --offline --cache $cache_folder --optional cache verify
 
-  npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error --audit=false $pm2_package
-  npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error --audit=false $pm2_service_package
-  npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error --audit=false $pm2_logrotate_package
+  npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error --audit=false --no-fund $pm2_package
+  npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error --audit=false --no-fund $pm2_service_package
+  npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error --audit=false --no-fund $pm2_logrotate_package
 
 } else {
   
   Write-Host "Cache not detected, installing online.."
   
-  npm install --global --loglevel=error --audit=false $pm2_package
-  npm install --global --loglevel=error --audit=false $pm2_service_package
-  npm install --global --loglevel=error --audit=false $pm2_logrotate_package
+  npm install --global --loglevel=error --audit=false --no-fund $pm2_package
+  npm install --global --loglevel=error --audit=false --no-fund $pm2_service_package
+  npm install --global --loglevel=error --audit=false --no-fund $pm2_logrotate_package
 }
 
 # Enable execution of pm2's powershell script, so the current user can interact with pm2

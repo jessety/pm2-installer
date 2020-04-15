@@ -21,9 +21,9 @@ npm uninstall --global-style --loglevel=error "@innomizetech/pm2-windows-service
 npm uninstall --global-style --loglevel=error "pm2-logrotate"
 
 Write-Host "Populating cache with all dependencies.."
-npm install --global-style --force --cache $cache_folder --shrinkwrap false --loglevel=error $pm2_package
-npm install --global-style --force --cache $cache_folder --shrinkwrap false --loglevel=error $pm2_service_package
-npm install --global-style --force --cache $cache_folder --shrinkwrap false --loglevel=error $pm2_logrotate_package
+npm install --global-style --force --cache $cache_folder --shrinkwrap false --loglevel=error --audit=false --no-fund $pm2_package
+npm install --global-style --force --cache $cache_folder --shrinkwrap false --loglevel=error --audit=false --no-fund $pm2_service_package
+npm install --global-style --force --cache $cache_folder --shrinkwrap false --loglevel=error --audit=false --no-fund $pm2_logrotate_package
 
 Write-Host "Removing local npm_modules folder.."
 Remove-Item $node_modules -recurse | Out-Null
