@@ -5,3 +5,4 @@ node_modules
 .npm_cache
 bundle.json
 bundle.tar.gz
+bundle.zip
