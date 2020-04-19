@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "@innomizetech/pm2-windows-service": "^1.1.1",
-    "pm2": "^4.2.3",
+    "pm2": "^4.3.0",
     "pm2-logrotate": "^2.7.0"
   }
 }
