@@ -31,17 +31,21 @@ if (Test-Path $cache_folder) {
 New-Item -ItemType Directory -Name $cache_folder | Out-Null
 
 Write-Host "Populating cache folder with all dependencies.."
-$PopulationDuration = Measure-Command { 
-  npm install --global-style --force --cache $cache_folder --shrinkwrap false --loglevel=error --audit=false --no-fund $pm2_package
-  npm install --global-style --force --cache $cache_folder --shrinkwrap false --loglevel=error --audit=false --no-fund $pm2_service_package
-  npm install --global-style --force --cache $cache_folder --shrinkwrap false --loglevel=error --audit=false --no-fund $pm2_logrotate_package
-}
+
+$PriorToPopulation = Get-Date
+
+npm install --global-style --force --cache $cache_folder --shrinkwrap false --loglevel=error --audit=false --no-fund $pm2_package
+npm install --global-style --force --cache $cache_folder --shrinkwrap false --loglevel=error --audit=false --no-fund $pm2_service_package
+npm install --global-style --force --cache $cache_folder --shrinkwrap false --loglevel=error --audit=false --no-fund $pm2_logrotate_package
+
+$PopulationDuration = $(Get-Date).Subtract($PriorToPopulation);
+
 Write-Host "Populating cache took $([Math]::Floor($PopulationDuration.TotalSeconds)) seconds."
 
 Write-Host "Compressing cache.."
-$CompressionDuration = Measure-Command { 
-  Compress-Archive -CompressionLevel Fastest -Path $cache_folder -DestinationPath $cache_archive
-}
+$PriorToCompression = Get-Date
+Compress-Archive -CompressionLevel Fastest -Path $cache_folder -DestinationPath $cache_archive
+$CompressionDuration = $(Get-Date).Subtract($PriorToCompression);
 Write-Host "Compressing cache took $([Math]::Floor($CompressionDuration.TotalSeconds)) seconds."
 
 Write-Host "Removing uncompressed cache folder.."
@@ -51,6 +55,6 @@ Remove-Item $cache_folder -recurse | Out-Null
 # Write system information to bundle file
 node src\bundle\write.js
 
-$Duration = $(Get-Date).Subtract($Epoch);
+$TotalDuration = $(Get-Date).Subtract($Epoch);
 
-Write-Host "=== Bundle Complete: took $([Math]::Floor($Duration.TotalSeconds)) seconds ==="
+Write-Host "=== Bundle Complete: took $([Math]::Floor($TotalDuration.TotalSeconds)) seconds ==="

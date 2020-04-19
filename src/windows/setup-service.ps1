@@ -1,5 +1,5 @@
 # Deploys PM2 as a Windows service
-# From: https://gist.github.com/mauron85/e55b3b9d722f91366c50fddf2fca07a4
+# Adapted from: https://gist.github.com/mauron85/e55b3b9d722f91366c50fddf2fca07a4
 
 param(
 	[string] $Directory = "C:\ProgramData\pm2"
@@ -36,7 +36,7 @@ function Create-Pm2-Home
 
 function Set-Daemon-Permissions
 {
-	$daemonPath = "$(npm config get prefix)\node_modules\@innomizetech\pm2-windows-service\src\daemon"
+	$daemonPath = "$(npm config get prefix --global)\node_modules\@innomizetech\pm2-windows-service\src\daemon"
 	Write-Host "Attempting to create $daemonPath and give FullControl to $User"
 	New-Item -ItemType Directory -Force -Path $daemonPath | Out-Null
 
@@ -56,7 +56,7 @@ function Set-Daemon-Permissions
 
 function Set-Npm-Folder-Permissions
 {
-	$path = "$(npm config get prefix)"
+	$path = "$(npm config get prefix --global)"
 	Write-Host "Attempting to give FullControl of $path to $User"
 
 	$rule = New-Object System.Security.AccessControl.FileSystemAccessRule(
@@ -72,7 +72,7 @@ function Set-Npm-Folder-Permissions
 		throw "$path : Failed to set permissions. Details : $_"
 	}
 
-	$path = "$(npm config get cache)"
+	$path = "$(npm config get cache --global)"
 	Write-Host "Attempting to give FullControl of $path to $User"
 
 	$rule = New-Object System.Security.AccessControl.FileSystemAccessRule(
@@ -104,7 +104,7 @@ function Install-Pm2-Service
 	& "pm2-service-install" "--unattended"
 	
 	# Create wrapper log file, otherwise it won't start
-	$wrapperLogPath = "$(npm config get prefix)\node_modules\@innomizetech\pm2-windows-service\src\daemon\pm2.wrapper.log"
+	$wrapperLogPath = "$(npm config get prefix --global)\node_modules\@innomizetech\pm2-windows-service\src\daemon\pm2.wrapper.log"
 	
 	if (Test-Path $wrapperLogPath) {
 		Write-Debug "PM2 service wrapper log file already exists"
@@ -156,7 +156,7 @@ function Change-Pm2-Service-Account
 }
 
 $env:PM2_HOME = $Directory
-$env:PM2_SERVICE_PM2_DIR = "$(npm config get prefix)\node_modules\pm2\index.js"
+$env:PM2_SERVICE_PM2_DIR = "$(npm config get prefix --global)\node_modules\pm2\index.js"
 # $env:PM2_SERVICE_SCRIPTS = " $Directory\ecosystem.json"
 
 [Environment]::SetEnvironmentVariable("PM2_HOME", $env:PM2_HOME, "Machine")

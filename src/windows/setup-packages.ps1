@@ -21,11 +21,9 @@ if (Test-Path $cache_archive) {
   }
 
   Write-Host "Decompressing cache.."
-
-  # Extract the archive
-  $DecompressionDuration = Measure-Command { 
-    Expand-Archive -Path $cache_archive -DestinationPath .\
-  }
+  $PriorToDecompression = Get-Date
+  Expand-Archive -Path $cache_archive -DestinationPath .\
+  $DecompressionDuration = $(Get-Date).Subtract($PriorToDecompression);
   Write-Host "Decompressing cache took $([Math]::Floor($DecompressionDuration.TotalSeconds)) seconds."
 
   # Read the bundle information file and compare it to the current host
@@ -34,25 +32,32 @@ if (Test-Path $cache_archive) {
   # Verify the cache folder contents
   npm --offline --cache $cache_folder --optional cache verify
 
-  Write-Host "Installing packages.."
+  Write-Host "Installing packages:"
+  Write-Host " - $($pm2_package)"
+  Write-Host " - $($pm2_service_package)"
+  Write-Host " - $($pm2_logrotate_package)"
 
-  $InstallDuration = Measure-Command { 
-    npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error --audit=false --no-fund $pm2_package
-    npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error --audit=false --no-fund $pm2_service_package
-    npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error --audit=false --no-fund $pm2_logrotate_package
-  }
+  $PriorToInstall = Get-Date
+
+  npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error --audit=false --no-fund $pm2_package
+  npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error --audit=false --no-fund $pm2_service_package
+  npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error --audit=false --no-fund $pm2_logrotate_package
+
+  $InstallDuration = $(Get-Date).Subtract($PriorToInstall);
 
   Write-Host "Installing packages took $([Math]::Floor($InstallDuration.TotalSeconds)) seconds."
 
 } else {
   
   Write-Host "Cache not detected, installing online.."
+
+  $PriorToInstall = Get-Date
   
-  $InstallDuration = Measure-Command { 
-    npm install --global --loglevel=error --audit=false --no-fund $pm2_package
-    npm install --global --loglevel=error --audit=false --no-fund $pm2_service_package
-    npm install --global --loglevel=error --audit=false --no-fund $pm2_logrotate_package
-  }
+  npm install --global --loglevel=error --audit=false --no-fund $pm2_package
+  npm install --global --loglevel=error --audit=false --no-fund $pm2_service_package
+  npm install --global --loglevel=error --audit=false --no-fund $pm2_logrotate_package
+
+  $InstallDuration = $(Get-Date).Subtract($PriorToInstall);
 
   Write-Host "Installing packages took $([Math]::Floor($InstallDuration.TotalSeconds)) seconds."
 }
@@ -65,6 +70,6 @@ if (Test-Path $script_path) {
   Unblock-File -Path $script_path
 }
 
-$Duration = $(Get-Date).Subtract($Epoch);
+$TotalDuration = $(Get-Date).Subtract($Epoch);
 
-Write-Host "=== Install Packages Complete: took $([Math]::Floor($Duration.TotalSeconds)) seconds ==="
+Write-Host "=== Install Packages Complete: took $([Math]::Floor($TotalDuration.TotalSeconds)) seconds ==="
