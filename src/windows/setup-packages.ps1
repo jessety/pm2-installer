@@ -5,26 +5,43 @@ $Epoch = Get-Date
 $pm2_package = "$(node src/echo-dependency.js pm2)"
 $pm2_service_package = "$(node src/echo-dependency.js pm2-windows-service)";
 $pm2_logrotate_package = "$(node src/echo-dependency.js pm2-logrotate)"
+
 $cache_folder = ".\.npm_cache";
-$cache_archive = ".\bundle.zip";
+$cache_archive_tar=".\bundle.tar.gz"
+$cache_archive_zip = ".\bundle.zip";
 
 # Print out the versions of this package, node, and npm for this host
 node src\bundle\current.js
 
-if (Test-Path $cache_archive) {
+# Check for the presense of an offline bundle, which could be either bundle.tar.gz or bundle.zip
 
-  Write-Host "Cache detected, installing offline.."
+if ((Test-Path $cache_archive_tar) -or (Test-Path $cache_archive_zip)) {
 
   # Remove the existing cache directory, if one exists
   if (Test-Path $cache_folder) {
     Remove-Item $cache_folder -recurse | Out-Null
   }
 
-  Write-Host "Decompressing cache.."
-  $PriorToDecompression = Get-Date
-  Expand-Archive -Path $cache_archive -DestinationPath .\
-  $DecompressionDuration = $(Get-Date).Subtract($PriorToDecompression);
-  Write-Host "Decompressing cache took $([Math]::Floor($DecompressionDuration.TotalSeconds)) seconds."
+  # Check if tar.exe is available and if a .tar.gz bundle is included. If so, extract that.
+  # Otherwise, extract the .zip file
+  # tar.exe is significantly faster, but might not be available
+
+  if ((Get-Command "tar.exe" -ErrorAction SilentlyContinue) -and (Test-Path $cache_archive_tar)) {
+
+    Write-Host "Cache tar bundle detected. Decompressing.."
+
+    $BeforeTar = Get-Date
+    tar.exe -xzf $cache_archive_tar
+    Write-Host "Decompressing $cache_archive_tar took $([Math]::Floor($(Get-Date).Subtract($BeforeTar).TotalSeconds)) seconds."
+
+  } else {
+
+    Write-Host "Cache zip bundle detected. Decompressing.."
+
+    $BeforeZip = Get-Date
+    Expand-Archive -Force -Path $cache_archive_zip -DestinationPath .\
+    Write-Host "Decompressing $cache_archive_zip took $([Math]::Floor($(Get-Date).Subtract($BeforeZip).TotalSeconds)) seconds."
+  }
 
   # Read the bundle information file and compare it to the current host
   node src\bundle\compare.js
@@ -43,13 +60,11 @@ if (Test-Path $cache_archive) {
   npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error --audit=false --no-fund $pm2_service_package
   npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error --audit=false --no-fund $pm2_logrotate_package
 
-  $InstallDuration = $(Get-Date).Subtract($PriorToInstall);
-
-  Write-Host "Installing packages took $([Math]::Floor($InstallDuration.TotalSeconds)) seconds."
+  Write-Host "Installing packages took $([Math]::Floor($(Get-Date).Subtract($PriorToInstall).TotalSeconds)) seconds."
 
 } else {
   
-  Write-Host "Cache not detected, installing online.."
+  Write-Host "Cache bundle not detected, installing online.."
 
   $PriorToInstall = Get-Date
   
@@ -57,9 +72,7 @@ if (Test-Path $cache_archive) {
   npm install --global --loglevel=error --audit=false --no-fund $pm2_service_package
   npm install --global --loglevel=error --audit=false --no-fund $pm2_logrotate_package
 
-  $InstallDuration = $(Get-Date).Subtract($PriorToInstall);
-
-  Write-Host "Installing packages took $([Math]::Floor($InstallDuration.TotalSeconds)) seconds."
+  Write-Host "Installing packages took $([Math]::Floor($(Get-Date).Subtract($PriorToInstall).TotalSeconds)) seconds."
 }
 
 # Enable execution of pm2's powershell script, so the current user can interact with pm2
