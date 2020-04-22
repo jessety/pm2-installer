@@ -1,5 +1,5 @@
 param(
-	[string] $Force = $true
+  [string] $Force = $true
 )
 
 # & .\src\windows\configure-policy.ps1

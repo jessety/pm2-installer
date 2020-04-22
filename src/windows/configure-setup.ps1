@@ -1,5 +1,5 @@
 param(
-	[string] $Directory = "c:\ProgramData\npm"
+  [string] $Directory = "c:\ProgramData\npm"
 )
 
 Write-Host "=== Configuring npm to use $Directory ==="
@@ -14,28 +14,28 @@ function Create-Directories {
     Write-Host "Directory $Directory already exists, no need to create it."
   } else {
     Write-Host "Creating $Directory"
-	  New-Item -ItemType Directory -Force -Path $Directory | Out-Null
+    New-Item -ItemType Directory -Force -Path $Directory | Out-Null
   }
 
   if (Test-Path $Directory_prefix) {
     Write-Host "Directory $Directory_prefix already exists, no need to create it."
   } else {
     Write-Host "Creating $Directory_prefix"
-	  New-Item -ItemType Directory -Force -Path $Directory_prefix | Out-Null
+    New-Item -ItemType Directory -Force -Path $Directory_prefix | Out-Null
   }
 
   if (Test-Path $Directory_modules) {
     Write-Host "Directory $Directory_modules already exists, no need to create it."
   } else {
     Write-Host "Creating $Directory_modules"
-	  New-Item -ItemType Directory -Force -Path $Directory_modules | Out-Null
+    New-Item -ItemType Directory -Force -Path $Directory_modules | Out-Null
   }
 
   if (Test-Path $Directory_cache) {
     Write-Host "Directory $Directory_cache already exists, no need to create it."
   } else {
     Write-Host "Creating $Directory_cache"
-	  New-Item -ItemType Directory -Force -Path $Directory_cache | Out-Null
+    New-Item -ItemType Directory -Force -Path $Directory_cache | Out-Null
   }
 }
 
@@ -63,7 +63,7 @@ function Set-NPM-Config {
 function Update-Path {
 
   param(
-	  [string] $NewPath
+    [string] $NewPath
   )
 
   $Paths = [Environment]::GetEnvironmentVariable('Path', [EnvironmentVariableTarget]::Machine) -split ';'

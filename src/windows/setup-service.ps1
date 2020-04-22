@@ -2,7 +2,7 @@
 # Adapted from: https://gist.github.com/mauron85/e55b3b9d722f91366c50fddf2fca07a4
 
 param(
-	[string] $Directory = "C:\ProgramData\pm2"
+  [string] $Directory = "C:\ProgramData\pm2"
 )
 
 $ErrorActionPreference = "Stop"
@@ -17,142 +17,142 @@ $User = ($localServiceSID.Translate([System.Security.Principal.NTAccount])).Valu
 
 function Create-Pm2-Home
 {
-	Write-Host "Attempting to create $Directory and give FullControl to $User"
-	New-Item -ItemType Directory -Force -Path  $Directory | Out-Null
+  Write-Host "Attempting to create $Directory and give FullControl to $User"
+  New-Item -ItemType Directory -Force -Path  $Directory | Out-Null
 
-	$rule = New-Object System.Security.AccessControl.FileSystemAccessRule(
-		$User, "FullControl", "ContainerInherit, ObjectInherit",
-		"None", "Allow")
+  $rule = New-Object System.Security.AccessControl.FileSystemAccessRule(
+    $User, "FullControl", "ContainerInherit, ObjectInherit",
+    "None", "Allow")
 
-	try {
-		$acl = Get-Acl -Path  $Directory -ErrorAction Stop
-		$acl.SetAccessRule($rule)
-		Set-Acl -Path  $Directory -AclObject $acl -ErrorAction Stop
-		Write-Host "Successfully set FullControl permissions on  $Directory"
-	} catch {
-		throw " $Directory : Failed to set permissions. Details : $_"
-	}
+  try {
+    $acl = Get-Acl -Path  $Directory -ErrorAction Stop
+    $acl.SetAccessRule($rule)
+    Set-Acl -Path  $Directory -AclObject $acl -ErrorAction Stop
+    Write-Host "Successfully set FullControl permissions on  $Directory"
+  } catch {
+    throw " $Directory : Failed to set permissions. Details : $_"
+  }
 }
 
 function Set-Daemon-Permissions
 {
-	$daemonPath = "$(npm config get prefix --global)\node_modules\@innomizetech\pm2-windows-service\src\daemon"
-	Write-Host "Attempting to create $daemonPath and give FullControl to $User"
-	New-Item -ItemType Directory -Force -Path $daemonPath | Out-Null
+  $daemonPath = "$(npm config get prefix --global)\node_modules\@innomizetech\pm2-windows-service\src\daemon"
+  Write-Host "Attempting to create $daemonPath and give FullControl to $User"
+  New-Item -ItemType Directory -Force -Path $daemonPath | Out-Null
 
-	$rule = New-Object System.Security.AccessControl.FileSystemAccessRule(
-		$User, "FullControl", "ContainerInherit, ObjectInherit",
-		"None", "Allow")
+  $rule = New-Object System.Security.AccessControl.FileSystemAccessRule(
+    $User, "FullControl", "ContainerInherit, ObjectInherit",
+    "None", "Allow")
 
-	try {
-		$acl = (Get-Item $daemonPath).GetAccessControl('Access')
-		$acl.SetAccessRule($rule)
-		Set-Acl -Path $daemonPath -AclObject $acl -ErrorAction Stop
-		Write-Host "Successfully set FullControl permissions on $daemonPath"
-	} catch {
-		throw "$daemonPath : Failed to set permissions. Details : $_"
-	}
+  try {
+    $acl = (Get-Item $daemonPath).GetAccessControl('Access')
+    $acl.SetAccessRule($rule)
+    Set-Acl -Path $daemonPath -AclObject $acl -ErrorAction Stop
+    Write-Host "Successfully set FullControl permissions on $daemonPath"
+  } catch {
+    throw "$daemonPath : Failed to set permissions. Details : $_"
+  }
 }
 
 function Set-Npm-Folder-Permissions
 {
-	$path = "$(npm config get prefix --global)"
-	Write-Host "Attempting to give FullControl of $path to $User"
+  $path = "$(npm config get prefix --global)"
+  Write-Host "Attempting to give FullControl of $path to $User"
 
-	$rule = New-Object System.Security.AccessControl.FileSystemAccessRule(
-		$User, "FullControl", "ContainerInherit, ObjectInherit",
-		"None", "Allow")
+  $rule = New-Object System.Security.AccessControl.FileSystemAccessRule(
+    $User, "FullControl", "ContainerInherit, ObjectInherit",
+    "None", "Allow")
 
-	try {
-		$acl = (Get-Item $path).GetAccessControl('Access')
-		$acl.SetAccessRule($rule)
-		Set-Acl -Path $path -AclObject $acl -ErrorAction Stop
-		Write-Host "Successfully set FullControl permissions on $path"
-	} catch {
-		throw "$path : Failed to set permissions. Details : $_"
-	}
+  try {
+    $acl = (Get-Item $path).GetAccessControl('Access')
+    $acl.SetAccessRule($rule)
+    Set-Acl -Path $path -AclObject $acl -ErrorAction Stop
+    Write-Host "Successfully set FullControl permissions on $path"
+  } catch {
+    throw "$path : Failed to set permissions. Details : $_"
+  }
 
-	$path = "$(npm config get cache --global)"
-	Write-Host "Attempting to give FullControl of $path to $User"
+  $path = "$(npm config get cache --global)"
+  Write-Host "Attempting to give FullControl of $path to $User"
 
-	$rule = New-Object System.Security.AccessControl.FileSystemAccessRule(
-		$User, "FullControl", "ContainerInherit, ObjectInherit",
-		"None", "Allow")
+  $rule = New-Object System.Security.AccessControl.FileSystemAccessRule(
+    $User, "FullControl", "ContainerInherit, ObjectInherit",
+    "None", "Allow")
 
-	try {
-		$acl = (Get-Item $path).GetAccessControl('Access')
-		$acl.SetAccessRule($rule)
-		Set-Acl -Path $path -AclObject $acl -ErrorAction Stop
-		Write-Host "Successfully set FullControl permissions on $path"
-	} catch {
-		throw "$path : Failed to set permissions. Details : $_"
-	}
+  try {
+    $acl = (Get-Item $path).GetAccessControl('Access')
+    $acl.SetAccessRule($rule)
+    Set-Acl -Path $path -AclObject $acl -ErrorAction Stop
+    Write-Host "Successfully set FullControl permissions on $path"
+  } catch {
+    throw "$path : Failed to set permissions. Details : $_"
+  }
 }
 
 function Install-Pm2-Service
 {
 
-	# node-windows creates services with the current working directory
-	# pm2-service-install doesn't currently allow manually specifying the working directory when it invokes node-windows
-	# However, if we just cd into the correct place before creating the service, it's almost good enough
+  # node-windows creates services with the current working directory
+  # pm2-service-install doesn't currently allow manually specifying the working directory when it invokes node-windows
+  # However, if we just cd into the correct place before creating the service, it's almost good enough
 
-	$wd = (Get-Item -Path '.\' -Verbose).FullName
+  $wd = (Get-Item -Path '.\' -Verbose).FullName
 
-	cd $Directory
+  cd $Directory
 
-	Write-Host "Running pm2-service-install.."
-	& "pm2-service-install" "--unattended"
-	
-	# Create wrapper log file, otherwise it won't start
-	$wrapperLogPath = "$(npm config get prefix --global)\node_modules\@innomizetech\pm2-windows-service\src\daemon\pm2.wrapper.log"
-	
-	if (Test-Path $wrapperLogPath) {
-		Write-Debug "PM2 service wrapper log file already exists"
-	} else {
-		Write-Debug "PM2 service wrapper log file does not exist. Creating.."
-		Out-File $wrapperLogPath -Encoding utf8
-	}
+  Write-Host "Running pm2-service-install.."
+  & "pm2-service-install" "--unattended"
+  
+  # Create wrapper log file, otherwise it won't start
+  $wrapperLogPath = "$(npm config get prefix --global)\node_modules\@innomizetech\pm2-windows-service\src\daemon\pm2.wrapper.log"
+  
+  if (Test-Path $wrapperLogPath) {
+    Write-Debug "PM2 service wrapper log file already exists"
+  } else {
+    Write-Debug "PM2 service wrapper log file does not exist. Creating.."
+    Out-File $wrapperLogPath -Encoding utf8
+  }
 
-	# Return back where we came from
-	cd $wd
+  # Return back where we came from
+  cd $wd
 }
 
 # From http://stackoverflow.com/a/4370900/964356
 function Set-ServiceAcctCreds
 {
-	param([string] $serviceName, [string] $newAcct, [string] $newPass)
+  param([string] $serviceName, [string] $newAcct, [string] $newPass)
 
-	$filter = "Name='$serviceName'"
+  $filter = "Name='$serviceName'"
 
-	$tries = 0
-	
-	while (($service -eq $null -and $tries -le 3)) {
-		if ($tries -ne 0) {
-			sleep 2
-		}
-		$service = Get-WMIObject -namespace "root\cimv2" -class Win32_Service -Filter $filter
-		$tries = $tries + 1
-	}
+  $tries = 0
+  
+  while (($service -eq $null -and $tries -le 3)) {
+    if ($tries -ne 0) {
+      sleep 2
+    }
+    $service = Get-WMIObject -namespace "root\cimv2" -class Win32_Service -Filter $filter
+    $tries = $tries + 1
+  }
 
-	if ($service -eq $null) {
-		throw "Could not find '$serviceName' service"
-	}
+  if ($service -eq $null) {
+    throw "Could not find '$serviceName' service"
+  }
 
-	$service.Change($null,$null,$null,$null,$null,$null,$newAcct,$newPass)
+  $service.Change($null,$null,$null,$null,$null,$null,$newAcct,$newPass)
 
-	$service.StopService()
+  $service.StopService()
 
-	while ($service.Started) {
-		sleep 2
-		$service = Get-WMIObject -namespace "root\cimv2" -class Win32_Service -Filter $filter
-	}
-	$service.StartService()
+  while ($service.Started) {
+    sleep 2
+    $service = Get-WMIObject -namespace "root\cimv2" -class Win32_Service -Filter $filter
+  }
+  $service.StartService()
 }
 
 function Change-Pm2-Service-Account
 {
-	Write-Host "Changing PM2 to run as $User"
-	Set-ServiceAcctCreds -serviceName "pm2.exe" -newAcct "$User" -newPass "" | Out-Null
+  Write-Host "Changing PM2 to run as $User"
+  Set-ServiceAcctCreds -serviceName "pm2.exe" -newAcct "$User" -newPass "" | Out-Null
 }
 
 $env:PM2_HOME = $Directory

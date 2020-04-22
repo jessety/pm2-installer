@@ -1,5 +1,5 @@
 param(
-	[string] $Force = $false
+  [string] $Force = $false
 )
 
 Write-Host "=== Checking PowerShell Execution Policy ==="
