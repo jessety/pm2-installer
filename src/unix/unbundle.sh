@@ -21,10 +21,10 @@ else
 fi
 
 if [ -f $bundle_file ]; then 
-  echo 'Bundle file detected, removing..'
+  echo 'Bundle info file detected, removing..'
   rm $bundle_file
 else
-  echo 'Bundle file not detected.'
+  echo 'Bundle info file not detected.'
 fi
 
 echo '=== Unbundle Complete ==='
