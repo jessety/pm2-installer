@@ -2,8 +2,8 @@
 
 echo "=== Setup ==="
 
-pm2_package=$(node src/echo-dependency.js pm2)
-pm2_logrotate_package=$(node src/echo-dependency.js pm2-logrotate)
+pm2_package=$(node src/tools/echo-dependency.js pm2)
+pm2_logrotate_package=$(node src/tools/echo-dependency.js pm2-logrotate)
 
 cache_folder="./.npm_cache";
 cache_archive="./bundle.tar.gz"
@@ -12,7 +12,7 @@ cache_archive="./bundle.tar.gz"
 node src/bundle-info/current.js
 
 # Check connectivity to registry.npmjs.org
-node src/npm-online.js
+node src/tools/npm-online.js
 
 if [ $? -eq 0 ]; then
 

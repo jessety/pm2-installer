@@ -2,7 +2,7 @@
 
 // Print the version of a specified dependency to the console
 
-const { dependencies } = require('../package.json');
+const { dependencies } = require('../../package.json');
 
 let [identifier] = process.argv.slice(2);
 

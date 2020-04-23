@@ -2,9 +2,9 @@ Write-Host "=== Bundle ==="
 
 $Epoch = Get-Date
 
-$pm2_package = "$(node src/echo-dependency.js pm2)"
-$pm2_service_package = "$(node src/echo-dependency.js pm2-windows-service)";
-$pm2_logrotate_package = "$(node src/echo-dependency.js pm2-logrotate)"
+$pm2_package = "$(node src/tools/echo-dependency.js pm2)"
+$pm2_service_package = "$(node src/tools/echo-dependency.js pm2-windows-service)";
+$pm2_logrotate_package = "$(node src/tools/echo-dependency.js pm2-logrotate)"
 
 $cache_folder = ".\.npm_cache";
 $cache_archive_tar=".\bundle.tar.gz"
