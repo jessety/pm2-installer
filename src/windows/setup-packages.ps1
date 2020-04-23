@@ -12,7 +12,7 @@ $cache_archive_zip = ".\bundle.zip";
 $bundle_info = ".\bundle.json";
 
 # Print out the versions of this package, node, and npm for this host
-node src\bundle\current.js
+node src\bundle-info\current.js
 
 # Check connectivity to registry.npmjs.org
 node src\npm-online.js
@@ -86,7 +86,7 @@ if ($? -eq $True) {
 
   # Read the bundle information file and compare it to the current host
   if (Test-Path $bundle_info) {
-    node src\bundle\compare.js
+    node src\bundle-info\compare.js
   }
 
   # Verify the cache folder contents

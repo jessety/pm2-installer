@@ -9,7 +9,7 @@ cache_folder="./.npm_cache";
 cache_archive="./bundle.tar.gz"
 
 # Print out the versions of this package, node, and npm for this host
-node src/bundle/current.js
+node src/bundle-info/current.js
 
 # Check connectivity to registry.npmjs.org
 node src/npm-online.js
@@ -36,7 +36,7 @@ else
     tar -xf $cache_archive
 
     # Read the bundle information file and compare it to the current host
-    node src/bundle/compare.js
+    node src/bundle-info/compare.js
 
     npm --offline --cache $cache_folder --optional cache verify
 

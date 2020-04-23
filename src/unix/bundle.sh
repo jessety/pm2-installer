@@ -25,6 +25,6 @@ tar -czf $cache_archive $cache_folder
 rm -rf $cache_folder
 
 # Write system information to bundle file
-node src/bundle/write.js
+node src/bundle-info/write.js
 
 echo "=== Bundle Complete ==="

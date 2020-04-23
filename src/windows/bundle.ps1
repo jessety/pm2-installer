@@ -73,7 +73,7 @@ Remove-Item $node_modules -recurse | Out-Null
 Remove-Item $cache_folder -recurse | Out-Null
 
 # Write system information to bundle file
-node src\bundle\write.js
+node src\bundle-info\write.js
 
 $TotalDuration = $(Get-Date).Subtract($Epoch);
 
