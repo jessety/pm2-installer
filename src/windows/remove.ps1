@@ -3,6 +3,9 @@ Write-Host "=== Remove ==="
 # Load the latest path
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
 
+# Remove logrotate module
+& .\src\windows\remove-logrotate.ps1
+
 # Remove the service, and reset associated environmental variables
 & .\src\windows\remove-service.ps1
 

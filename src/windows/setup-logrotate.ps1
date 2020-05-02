@@ -1,17 +1,32 @@
 Write-Host "=== Adding Log Rotation ==="
 
-# Remember where we are
-$wd = (Get-Item -Path '.\' -Verbose).FullName
+# Check connectivity to registry.npmjs.org
+node src\tools\npm-online.js
 
-$logrotate_directory = "$(npm config get prefix)\node_modules\pm2-logrotate\"
+if ($? -eq $True) {
+  
+  $logrotate_package = "$(node src/tools/echo-dependency.js pm2-logrotate)"
 
-Write-Host "Using directory: $logrotate_directory"
+  Write-Host "Installing $logrotate_package online.."
 
-cd $logrotate_directory
-pm2 install . --silent
+  pm2 install $logrotate_package --silent
+  
+} else {
+
+  $logrotate_directory = "$(npm config get prefix)\node_modules\pm2-logrotate\"
+
+  Write-Host "Installing pm2-logrotate locally in directory: $logrotate_directory"
+
+  # Remember where we are
+  $wd = (Get-Item -Path '.\' -Verbose).FullName
+
+  Set-Location $logrotate_directory
+  pm2 install . --silent
+
+  # Go back to where we were
+  Set-Location $wd
+}
+
 pm2 save --force
-
-# Go back to where we came from
-cd $wd
 
 Write-Host "=== Adding Log Rotation Complete ==="
