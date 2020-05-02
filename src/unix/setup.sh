@@ -16,10 +16,13 @@ node src/tools/npm-online.js
 
 if [ $? -eq 0 ]; then
 
-  echo "Installing packages.."
+  echo "Installing pm2.."
 
   npm install --global --loglevel=error --no-audit --no-fund $pm2_package
-  npm install --global --loglevel=error --no-audit --no-fund $pm2_logrotate_package
+
+  echo "Installing pm2-logrotate.."
+
+  pm2 install $pm2_logrotate_package
 
 else 
 
@@ -44,21 +47,27 @@ else
     npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error --no-audit --no-fund $pm2_package
     npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error --no-audit --no-fund $pm2_logrotate_package
 
+    echo "Installing pm2-logrotate.."
+    cd "$(npm config get prefix)/lib/node_modules/pm2-logrotate/"
+    pm2 install . --silent
+    pm2 save --force
+
   else
 
     echo "Offline bundle not detected. Attempting to install dependencies anyway.."
 
+    echo "Installing pm2.."
+
     npm install --global --loglevel=error --no-audit --no-fund $pm2_package
-    npm install --global --loglevel=error --no-audit --no-fund $pm2_logrotate_package
+
+    echo "Installing pm2-logrotate.."
+
+    pm2 install $pm2_logrotate_package
+
   fi
 fi
 
 # Run pm2 on startup
 pm2 startup
-
-# Add the logrotate module
-cd "$(npm config get prefix)/lib/node_modules/pm2-logrotate/"
-pm2 install . --silent
-pm2 save --force
 
 echo "=== Setup Complete ==="
