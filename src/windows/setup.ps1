@@ -21,7 +21,7 @@ if ($continue -eq 'n') {
 # Add the logrotate module
 & .\src\windows\setup-logrotate.ps1
 
+Write-Host "=== Setup Complete ===`n"
+
 Write-Host "`nTo interact with pm2, close this window and start a new terminal session."
 Write-Host "Alternatively, update your PM2_HOME env variable in this session by executing:`n  `$Env:PM2_HOME=`"$Env:PM2_HOME`"`n"
-
-Write-Host "=== Setup Complete ===`n"
