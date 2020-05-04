@@ -73,14 +73,16 @@ function describe(bundle) {
   return `${date.toLocaleDateString()}, ${name} ${cyan(version)} with node ${cyan(node)} and npm ${cyan(npm)} on ${cyan(platform)}-${cyan(release)}.`;
 }
 
-async function compare(bundle) {
+async function compare(bundle, current) {
 
   if (bundle === undefined) {
     console.error(`${colors.red('×')} Offline install bundle appears invalid.`);
     return;
   }
 
-  const current = await info();
+  if (current === undefined) {
+    current = await info();
+  }
 
   const { node, npm } = current;
   const { name, version } = current.package;

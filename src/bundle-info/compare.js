@@ -6,7 +6,7 @@ const bundle = require('./bundle');
 
   const current = await bundle.info();
 
-  const info = await bundle.read();
+  const bundled = await bundle.read();
 
-  bundle.compare(info);
+  bundle.compare(bundled, current);
 })();
