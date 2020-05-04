@@ -6,7 +6,7 @@
   "author": "Jesse Youngblood",
   "scripts": {
     "preinstall": "echo 'Installing this package is not necessary. Run \"npm run setup\" to install pm2.'",
-    "print-host": "node ./src/bundle/current.js",
+    "print-host": "node ./src/bundle-info/current.js",
     "print-config": "PowerShell -NoProfile -ExecutionPolicy Bypass src\\windows\\configure-print.ps1",
     "bundle": "node ./src/tools/script-for-os.js",
     "bundle:windows": "PowerShell -NoProfile -ExecutionPolicy Bypass src\\windows\\bundle.ps1",
