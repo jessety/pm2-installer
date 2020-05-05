@@ -7,7 +7,7 @@ $pm2_service_package = "$(node src/tools/echo-dependency.js pm2-windows-service)
 $pm2_logrotate_package = "$(node src/tools/echo-dependency.js pm2-logrotate)"
 
 $cache_folder = ".\.npm_cache";
-$cache_archive_tar=".\bundle.tar.gz"
+$cache_archive_tar = ".\bundle.tar.gz"
 $cache_archive_zip = ".\bundle.zip";
 $bundle_info = ".\bundle.json";
 
@@ -22,13 +22,13 @@ if ($? -eq $True) {
   Write-Host "Installing packages.."
 
   $PriorToInstall = Get-Date
-  
+
   npm install --global --loglevel=error --no-audit --no-fund $pm2_package
   npm install --global --loglevel=error --no-audit --no-fund $pm2_service_package
   npm install --global --loglevel=error --no-audit --no-fund $pm2_logrotate_package
 
   Write-Host "Installing packages took $([Math]::Floor($(Get-Date).Subtract($PriorToInstall).TotalSeconds)) seconds."
-  
+
 } elseif ((Test-Path $cache_archive_tar) -or (Test-Path $cache_archive_zip) -or (Test-Path $cache_folder)) {
 
   Write-Host "Cannot connect to the npm registry. Checking for offline bundle.."

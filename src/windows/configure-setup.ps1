@@ -78,7 +78,7 @@ function Update-Path {
 
     # Also update session path
     $Env:Path += ";$NewPath"
-  
+
   } else {
 
     Write-Host "Path already contains $NewPath, no need to update it."
