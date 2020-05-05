@@ -5,7 +5,8 @@
   "license": "MIT",
   "author": "Jesse Youngblood",
   "scripts": {
-    "preinstall": "echo 'Installing this package is not necessary. Run \"npm run setup\" to install pm2.'",
+    "postinstall": "echo 'Installing this package is not necessary. Run \"npm run setup\" to install pm2.'",
+    "lint": "eslint . && editorconfig-checker",
     "print-host": "node ./src/bundle-info/current.js",
     "print-config": "PowerShell -NoProfile -ExecutionPolicy Bypass src\\windows\\configure-print.ps1",
     "bundle": "node ./src/tools/script-for-os.js",
@@ -38,5 +39,10 @@
     "@innomizetech/pm2-windows-service": "^1.1.1",
     "pm2": "^4.4.0",
     "pm2-logrotate": "^2.7.0"
+  },
+  "devDependencies": {
+    "@jessety/eslint-config": "^1.0.5",
+    "editorconfig-checker": "^3.0.4",
+    "eslint": "^6.8.0"
   }
 }
