@@ -93,8 +93,8 @@ if ($? -ne $True) {
 }
 
 if (($null -ne $PM2_SERVICE_DIRECTORY) -and (Test-Path $PM2_SERVICE_DIRECTORY)) {
-  Write-Host "Unlinking node-windows in $PM2_SERVICE_DIRECTORY"
-  npm unlink node-windows --loglevel=error --no-fund --no-audit
+  # Write-Host "Unlinking node-windows in $PM2_SERVICE_DIRECTORY"
+  # npm unlink node-windows --loglevel=error --no-fund --no-audit
 
   Set-Location $wd
 

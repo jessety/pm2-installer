@@ -66,15 +66,15 @@ function Install-Service-Files {
 
   # Next, link node-windows in that directory
 
-  Write-Host "Service filed copied over. Linking node-windows in `"$PM2_SERVICE_DIRECTORY`".."
+  # Write-Host "Service filed copied over. Linking node-windows in `"$PM2_SERVICE_DIRECTORY`".."
 
-  $wd = (Get-Item -Path '.\' -Verbose).FullName
+  # $wd = (Get-Item -Path '.\' -Verbose).FullName
 
-  Set-Location $PM2_SERVICE_DIRECTORY
-  npm link node-windows --loglevel=error --no-fund --no-audit
-  Set-Location $wd
+  # Set-Location $PM2_SERVICE_DIRECTORY
+  # npm link node-windows --loglevel=error --no-fund --no-audit
+  # Set-Location $wd
 
-  Write-Host "Linked node-windows in $PM2_SERVICE_DIRECTORY"
+  # Write-Host "Linked node-windows in $PM2_SERVICE_DIRECTORY"
 }
 
 function Install-Service {
