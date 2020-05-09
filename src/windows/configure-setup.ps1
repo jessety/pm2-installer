@@ -1,5 +1,5 @@
 param(
-  [string] $Directory = "c:\ProgramData\npm"
+  [string] $Directory = "$($env:ProgramData)\npm"
 )
 
 Write-Host "=== Configuring npm to use $Directory ==="

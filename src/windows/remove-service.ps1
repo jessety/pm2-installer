@@ -108,7 +108,7 @@ if (($null -ne $PM2_HOME) -and (Test-Path $PM2_HOME)) {
   Remove-Item $PM2_HOME -Recurse -Force | Out-Null
 }
 
-$PM2_PARENT_FOLDER = "C:\ProgramData\pm2"
+$PM2_PARENT_FOLDER = "$($env:ProgramData)\pm2"
 if (($null -ne $PM2_PARENT_FOLDER) -and (Test-Path $PM2_PARENT_FOLDER)) {
 
   Write-Host "Deleting `"$PM2_PARENT_FOLDER`""

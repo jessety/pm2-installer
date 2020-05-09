@@ -1,6 +1,6 @@
 param(
-  [string] $PM2_HOME = "C:\ProgramData\pm2\home",
-  [string] $PM2_SERVICE_DIRECTORY = "C:\ProgramData\pm2\service"
+  [string] $PM2_HOME = "$($env:ProgramData)\pm2\home",
+  [string] $PM2_SERVICE_DIRECTORY = "$($env:ProgramData)\pm2\service"
 )
 
 $ErrorActionPreference = "Stop"
