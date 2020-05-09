@@ -1,9 +1,17 @@
 {
   "name": "pm2-installer",
-  "version": "2.5.0",
+  "version": "3.0.0-ALPHA-1",
   "description": "Install pm2 offline as a service on Windows or Linux",
   "license": "MIT",
   "author": "Jesse Youngblood",
+  "homepage": "https://github.com/jessety/pm2-installer#readme",
+  "bugs": {
+    "url": "https://github.com/jessety/pm2-installer/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jessety/pm2-installer.git"
+  },
   "scripts": {
     "postinstall": "echo 'Installing this package is not necessary. Run \"npm run setup\" to install pm2.'",
     "lint": "eslint . && editorconfig-checker",
@@ -35,10 +43,12 @@
     "remove:unix": "bash ./src/unix/remove.sh",
     "remove:default": "echo 'ERROR: Could not detect host platform'"
   },
-  "dependencies": {
-    "@innomizetech/pm2-windows-service": "^1.1.1",
-    "pm2": "^4.4.0",
-    "pm2-logrotate": "^2.7.0"
+  "windowsDependencies": {
+    "node-windows": "^1.0.0-beta.1"
+  },
+  "globalDependencies": {
+    "pm2": "4.4.0",
+    "pm2-logrotate": "2.7.0"
   },
   "devDependencies": {
     "@jessety/eslint-config": "^1.0.5",

@@ -1,8 +1,8 @@
-$pm2_package = "$(node src/dependency.js pm2)"
-$pm2_service_package = "$(node src/dependency.js pm2-windows-service)";
-$pm2_logrotate_package = "$(node src/dependency.js pm2-logrotate)"
+$pm2_package = "$(node src/tools/echo-dependency.js pm2)"
+$pm2_logrotate_package = "$(node src/tools/echo-dependency.js pm2-logrotate)"
+$node_windows_package = "$(node src/tools/echo-dependency.js node-windows windows)"
 
 Write-Host "Using:"
 Write-Host "- $pm2_package"
-Write-Host "- $pm2_service_package"
 Write-Host "- $pm2_logrotate_package"
+Write-Host "- $node_windows_package"

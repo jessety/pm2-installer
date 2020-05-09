@@ -21,6 +21,7 @@ if ($? -eq $True) {
   $wd = (Get-Item -Path '.\' -Verbose).FullName
 
   Set-Location $logrotate_directory
+
   pm2 install . --silent
 
   # Go back to where we were

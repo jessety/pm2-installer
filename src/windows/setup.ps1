@@ -4,7 +4,7 @@ Write-Host "=== Setup ==="
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
 
 # Check the npm configuration to ensure the prefix isn't in the current user's appdata folder
-$continue = &".\src\windows\configure-check.ps1" | select -Last 1
+$continue = &".\src\windows\configure-check.ps1" | Select-Object -Last 1
 
 if ($continue -eq 'n') {
   Write-Host "=== Setup Canceled ==="
