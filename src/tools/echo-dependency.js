@@ -2,21 +2,32 @@
 
 // Print the version of a specified dependency to the console
 
-const { dependencies } = require('../../package.json');
+const pkg = require('../../package.json');
 
-let [identifier] = process.argv.slice(2);
+let [identifier, type] = process.argv.slice(2);
+
+if (type === undefined) {
+  type = 'global';
+}
+
+let dependencies = {};
+
+if (type === 'windows') {
+  dependencies = pkg.windowsDependencies;
+} else if (type === 'global') {
+  dependencies = pkg.globalDependencies;
+} else if (type === 'dev') {
+  dependencies = pkg.devDependencies;
+} else {
+  process.exit();
+}
 
 if (identifier === undefined) {
   // No can do.
   process.exit();
 }
 
-// The dependencies we use are: 'pm2', 'pm2-windows-service', or 'pm2-logrotate'
-
-// pm2-windows-service is unmaintained, so we're using a fork
-if (identifier === 'pm2-windows-service') {
-  identifier = '@innomizetech/pm2-windows-service';
-}
+// The global dependencies we need are: 'pm2' and 'pm2-logrotate'
 
 if (dependencies[identifier] === undefined) {
   // Nope.

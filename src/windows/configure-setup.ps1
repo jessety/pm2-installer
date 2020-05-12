@@ -1,5 +1,5 @@
 param(
-  [string] $Directory = "c:\ProgramData\npm"
+  [string] $Directory = "$($env:ProgramData)\npm"
 )
 
 Write-Host "=== Configuring npm to use $Directory ==="
@@ -78,7 +78,7 @@ function Update-Path {
 
     # Also update session path
     $Env:Path += ";$NewPath"
-  
+
   } else {
 
     Write-Host "Path already contains $NewPath, no need to update it."

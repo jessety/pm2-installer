@@ -3,16 +3,21 @@ Write-Host "=== Install Packages ==="
 $Epoch = Get-Date
 
 $pm2_package = "$(node src/tools/echo-dependency.js pm2)"
-$pm2_service_package = "$(node src/tools/echo-dependency.js pm2-windows-service)";
 $pm2_logrotate_package = "$(node src/tools/echo-dependency.js pm2-logrotate)"
+$node_windows_package = "$(node src/tools/echo-dependency.js node-windows windows)"
 
-$cache_folder = ".\.npm_cache";
-$cache_archive_tar=".\bundle.tar.gz"
-$cache_archive_zip = ".\bundle.zip";
-$bundle_info = ".\bundle.json";
+$cache_folder = ".\.npm_cache"
+$cache_archive_tar = ".\bundle.tar.gz"
+$cache_archive_zip = ".\bundle.zip"
+$bundle_info = ".\bundle.json"
 
 # Print out the versions of this package, node, and npm for this host
 node src\bundle-info\current.js
+
+Write-Host "Using: "
+Write-Host " $pm2_package"
+Write-Host " $pm2_logrotate_package"
+Write-Host " $node_windows_package"
 
 # Check connectivity to registry.npmjs.org
 node src\tools\npm-online.js
@@ -22,13 +27,13 @@ if ($? -eq $True) {
   Write-Host "Installing packages.."
 
   $PriorToInstall = Get-Date
-  
+
   npm install --global --loglevel=error --no-audit --no-fund $pm2_package
-  npm install --global --loglevel=error --no-audit --no-fund $pm2_service_package
   npm install --global --loglevel=error --no-audit --no-fund $pm2_logrotate_package
+  npm install --global --loglevel=error --no-audit --no-fund $node_windows_package
 
   Write-Host "Installing packages took $([Math]::Floor($(Get-Date).Subtract($PriorToInstall).TotalSeconds)) seconds."
-  
+
 } elseif ((Test-Path $cache_archive_tar) -or (Test-Path $cache_archive_zip) -or (Test-Path $cache_folder)) {
 
   Write-Host "Cannot connect to the npm registry. Checking for offline bundle.."
@@ -97,8 +102,8 @@ if ($? -eq $True) {
   $PriorToInstall = Get-Date
 
   npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error --no-audit --no-fund $pm2_package
-  npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error --no-audit --no-fund $pm2_service_package
   npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error --no-audit --no-fund $pm2_logrotate_package
+  npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error --no-audit --no-fund $node_windows_package
 
   Write-Host "Installing packages took $([Math]::Floor($(Get-Date).Subtract($PriorToInstall).TotalSeconds)) seconds."
 
@@ -109,11 +114,14 @@ if ($? -eq $True) {
   # This will probably not work.
 
   npm install --global --loglevel=error --no-audit --no-fund $pm2_package
-  npm install --global --loglevel=error --no-audit --no-fund $pm2_service_package
   npm install --global --loglevel=error --no-audit --no-fund $pm2_logrotate_package
+  npm install --global --loglevel=error --no-audit --no-fund $node_windows_package
 }
 
-# Enable execution of pm2's powershell script, so the current user can interact with pm2
+Write-Host "Linking node-windows.."
+npm link node-windows --loglevel=error --no-fund --no-audit
+
+# Enable execution of pm2's powershell script, so the current user can interact with the pm2 powershell script
 $script_path = "$(npm config get prefix)\pm2.ps1"
 if (Test-Path $script_path) {
 
@@ -121,6 +129,6 @@ if (Test-Path $script_path) {
   Unblock-File -Path $script_path
 }
 
-$TotalDuration = $(Get-Date).Subtract($Epoch);
+$TotalDuration = $(Get-Date).Subtract($Epoch)
 
 Write-Host "=== Install Packages Complete: took $([Math]::Floor($TotalDuration.TotalSeconds)) seconds ==="

@@ -29,7 +29,7 @@ if ($valid -eq $false) {
   $confirmation = Read-Host -Prompt "Are you sure you want to proceed anyway? (Y/N)"
 
   while ($confirmation -ne "y" -and $confirmation -ne "Y") {
-    
+
     if ($confirmation -eq 'n' -or $confirmation -eq 'N') {
       # Inform the script that called this that we're not going forward
       Write-Output "n"

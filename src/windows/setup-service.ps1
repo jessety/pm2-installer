@@ -1,155 +1,106 @@
-# Deploys PM2 as a Windows service
-# Adapted from: https://gist.github.com/mauron85/e55b3b9d722f91366c50fddf2fca07a4
-
-param([string] $Directory = "C:\ProgramData\pm2")
+param(
+  [string] $PM2_HOME = "$($env:ProgramData)\pm2\home",
+  [string] $PM2_SERVICE_DIRECTORY = "$($env:ProgramData)\pm2\service"
+)
 
 $ErrorActionPreference = "Stop"
 
-# Query for the name of the Local Service user by its security identifier
-# https://support.microsoft.com/en-us/help/243330/well-known-security-identifiers-in-windows-operating-systems
-$localServiceSID = New-Object System.Security.Principal.SecurityIdentifier("S-1-5-19")
-$User = ($localServiceSID.Translate([System.Security.Principal.NTAccount])).Value
+function Set-ENV {
+  $env:PM2_HOME = $PM2_HOME
+  $env:PM2_INSTALL_DIRECTORY = $PM2_INSTALL_DIRECTORY
+  $env:PM2_SERVICE_DIRECTORY = $PM2_SERVICE_DIRECTORY
 
-Write-Host "=== Creating Service ==="
-Write-Host "  PM2_HOME: $Directory"
-Write-Host "  User:     $User"
+  [Environment]::SetEnvironmentVariable("PM2_HOME", $env:PM2_HOME, "Machine")
+  [Environment]::SetEnvironmentVariable("PM2_INSTALL_DIRECTORY", $env:PM2_INSTALL_DIRECTORY, "Machine")
+  [Environment]::SetEnvironmentVariable("PM2_SERVICE_DIRECTORY", $env:PM2_SERVICE_DIRECTORY, "Machine")
+}
 
-function New-PM2-Home {
-  Write-Host "Attempting to create `"$Directory`" and give FullControl to `"$User`""
+function New-Directory {
+  param([string] $Directory)
+
+  Write-Host "Attempting to create `"$Directory`""
 
   if (Test-Path $Directory) {
-    Write-Host "`"$Directory`" already exists, no need to create it."
+    Write-Host "Directory `"$Directory`" already exists, no need to create it."
   } else {
-    Write-Host "`"$Directory`" does not exist, creating it.."
+    Write-Host "Directory `"$Directory`" does not exist, creating it.."
     New-Item -ItemType Directory -Force -Path $Directory | Out-Null
   }
+}
 
-  $rule = New-Object System.Security.AccessControl.FileSystemAccessRule(
-    $User, "FullControl", "ContainerInherit, ObjectInherit",
-    "None", "Allow")
+function Set-Permissions {
+  param([string] $Directory, [string] $User)
+
+  Write-Host "Attempting to grant `"$User`" full permissions to `"$Directory`"."
+
+  $rule = New-Object System.Security.AccessControl.FileSystemAccessRule($User, "FullControl", "ContainerInherit, ObjectInherit", "None", "Allow")
 
   try {
-    $acl = Get-Acl -Path  $Directory -ErrorAction Stop
+    $acl = Get-Acl -Path $Directory -ErrorAction Stop
+
+    # $acl.SetAccessRuleProtection($true, $false)
+    # $acl.Access | ForEach-Object { $acl.RemoveAccessRule($_) | Out-Null }
+
     $acl.SetAccessRule($rule)
-    Set-Acl -Path  $Directory -AclObject $acl -ErrorAction Stop
+
+    Set-Acl -Path $Directory -AclObject $acl -ErrorAction Stop
+
     Write-Host "Successfully set permissions on `"$Directory`"."
+
   } catch {
+
     throw "Failed to set permissions on `"$Directory`". Details: $_"
   }
 }
+function Install-Service-Files {
 
-function Set-Daemon-Permissions {
-  $daemonPath = "$(npm config get prefix --global)\node_modules\@innomizetech\pm2-windows-service\src\daemon"
-  Write-Host "Attempting to create `"$daemonPath`" and give FullControl to `"$User`""
+  # First, copy the service files
 
-  if (Test-Path $daemonPath) {
-    Write-Host "`"$daemonPath`" already exists, no need to create it."
-  } else {
-    Write-Host "`"$daemonPath`" does not exist, creating it.."
-    New-Item -ItemType Directory -Force -Path $daemonPath | Out-Null
-  }
+  $source = ".\src\windows\service\"
 
-  $rule = New-Object System.Security.AccessControl.FileSystemAccessRule(
-    $User, "FullControl", "ContainerInherit, ObjectInherit",
-    "None", "Allow")
+  Write-Host "Copying service files from `"$source`" to `"$PM2_SERVICE_DIRECTORY`".."
 
-  try {
-    $acl = (Get-Item $daemonPath).GetAccessControl('Access')
-    $acl.SetAccessRule($rule)
-    Set-Acl -Path $daemonPath -AclObject $acl -ErrorAction Stop
-    Write-Host "Successfully set permissions on `"$daemonPath`"."
-  } catch {
-    throw "Failed to set permissions on `"$daemonPath`". Details: $_"
-  }
+  Copy-Item -Path $source\* -Destination $PM2_SERVICE_DIRECTORY -Recurse -Force
+
+  Write-Host "Copying files complete."
+
+  # Next, link node-windows in that directory
+
+  # Write-Host "Service filed copied over. Linking node-windows in `"$PM2_SERVICE_DIRECTORY`".."
+
+  # $wd = (Get-Item -Path '.\' -Verbose).FullName
+
+  # Set-Location $PM2_SERVICE_DIRECTORY
+  # npm link node-windows --loglevel=error --no-fund --no-audit
+  # Set-Location $wd
+
+  # Write-Host "Linked node-windows in $PM2_SERVICE_DIRECTORY"
 }
 
-function Set-NPM-Folder-Permissions {
-  $path = "$(npm config get prefix --global)"
-  Write-Host "Attempting to give FullControl of `"$path`" to `"$User`""
+function Install-Service {
+  param([string] $Directory, [string] $User)
 
-  $rule = New-Object System.Security.AccessControl.FileSystemAccessRule(
-    $User, "FullControl", "ContainerInherit, ObjectInherit",
-    "None", "Allow")
-
-  try {
-    $acl = (Get-Item $path).GetAccessControl('Access')
-    $acl.SetAccessRule($rule)
-    Set-Acl -Path $path -AclObject $acl -ErrorAction Stop
-    Write-Host "Successfully set permissions on `"$path`"."
-  } catch {
-    throw "Failed to set permissions on `"$path`". Details: $_"
-  }
-
-  $path = "$(npm config get cache --global)"
-  Write-Host "Attempting to give FullControl of `"$path`" to `"$User`""
-
-  $rule = New-Object System.Security.AccessControl.FileSystemAccessRule(
-    $User, "FullControl", "ContainerInherit, ObjectInherit",
-    "None", "Allow")
-
-  try {
-    $acl = (Get-Item $path).GetAccessControl('Access')
-    $acl.SetAccessRule($rule)
-    Set-Acl -Path $path -AclObject $acl -ErrorAction Stop
-    Write-Host "Successfully set permissions on `"$path`"."
-  } catch {
-    throw "Failed to set permissions on `"$path`". Details: $_"
-  }
-}
-
-function Install-PM2-Service {
-  # Create wrapper log file, otherwise it won't start
-
-  $wrapperLogPath = "$(npm config get prefix --global)\node_modules\@innomizetech\pm2-windows-service\src\daemon\pm2.wrapper.log"
-
-  if (Test-Path $wrapperLogPath) {
-    Write-Debug "PM2 service wrapper log file already exists"
-  } else {
-    Write-Debug "PM2 service wrapper log file does not exist. Creating.."
-    Out-File $wrapperLogPath -Encoding utf8
-  }
-
-  # Ensure that the pm2-service-install command exists before attempting to invoke it
-
-  if ([bool](Get-Command "pm2-service-install" -ErrorAction SilentlyContinue) -eq $False) {
-    throw "pm2-windows-service is not installed."
-  }
-
-  Write-Host "Running pm2-service-install.."
-
-  # node-windows creates services with the current working directory
-  # pm2-service-install doesn't currently allow manually specifying the working directory when it invokes node-windows
-  # However, if we just cd into the correct place before creating the service, it's almost good enough
+  Write-Host "Running Node service install script.."
 
   $wd = (Get-Item -Path '.\' -Verbose).FullName
 
-  Set-Location $Directory
-
-  pm2-service-install --unattended
-
-  # Make sure this command succeeded
+  Set-Location $PM2_SERVICE_DIRECTORY
+  node "$wd\src\windows\service-management\install.js" $Directory $User
+  Set-Location $wd
 
   if ($? -ne $True) {
-
-    # Return back where we came from
-    Set-Location $wd
-
-    throw "pm2-service-install failed."
+    throw "Service install script failed."
   }
-
-  # Return back where we came from
-  Set-Location $wd
 }
-
-# Adapted from http://stackoverflow.com/a/4370900/964356
 function Set-ServiceUser {
-  param([string] $serviceName, [string] $username, [string] $pass)
+  param([string] $name, [string] $username, [string] $pass)
 
-  # Write-Host "Set-ServiceUser -serviceName `"$serviceName`" -username `"$username`""
+  # Write-Host "Set-ServiceUser -name `"$name`" -username `"$username`""
+  Write-Host "Updating `"$name`" service to run as `"$username`""
 
   # Create a filter to query for the service by
 
-  $filter = "Name='$serviceName'"
+  $filter = "Name='$name'"
 
   # Query for the service, wait a second if we can't find it right away
 
@@ -161,7 +112,7 @@ function Set-ServiceUser {
 
     if ($attempt -ne 0) {
       Start-Sleep -Milliseconds 1000
-      Write-Host "Attempt #$($attempt + 1) to locate `"$serviceName`" service.."
+      Write-Host "Attempt #$($attempt + 1) to locate `"$name`" service.."
     }
 
     $service = Get-WMIObject -class Win32_Service -Filter $filter
@@ -170,41 +121,18 @@ function Set-ServiceUser {
   }
 
   if ($null -eq $service) {
-    throw "Could not find `"$serviceName`" service after $maxAttempts attempts."
+    throw "Could not find `"$name`" service after $maxAttempts attempts."
   }
 
   # Now that we have a reference to the service, change it's user account
 
-  Write-Host "Found `"$serviceName`" service:"
+  Write-Host "Found `"$name`" service:"
   Write-Host "  State: $($service.State)"
   Write-Host "  Status: $($service.Status)"
   Write-Host "  Started: $($service.Started)"
   Write-Host "  Start Mode: $($service.StartMode)"
-  Write-Host "  Start Name: $($service.StartName)"
   Write-Host "  Service Type: $($service.ServiceType)"
-
-  # Stop the service
-  Write-Host "Stopping service.."
-
-  $response = $service.StopService()
-
-  if ($response.ReturnValue -ne 0) {
-    $message = Get-Service-Error-For-Code($response.ReturnValue)
-    throw "Could not stop service: $message"
-  }
-
-  # Wait until it has stopped
-
-  $service = Get-WMIObject -class Win32_Service -Filter $filter
-
-  Write-Host "  State is now: $($service.State)"
-
-  while ($service.State -ne 'Stopped') {
-
-    Start-Sleep -Milliseconds 250
-    $service = Get-WMIObject -class Win32_Service -Filter $filter
-    Write-Host "  State is now: $($service.State)"
-  }
+  Write-Host "  Start Name: $($service.StartName)"
 
   Write-Host "Changing service user account.."
 
@@ -215,7 +143,36 @@ function Set-ServiceUser {
     throw "Could not change service user: $message"
   }
 
-  # Start it up agian
+  # If the service isn't already stopped, stop it.
+
+  if ($service.State -ne 'Stopped') {
+
+    # Stop the service
+    Write-Host "Stopping service.."
+
+    $response = $service.StopService()
+
+    if ($response.ReturnValue -ne 0) {
+      $message = Get-Service-Error-For-Code($response.ReturnValue)
+      throw "Could not stop service: $message"
+    }
+
+    # Wait until it has stopped
+
+    $service = Get-WMIObject -class Win32_Service -Filter $filter
+
+    Write-Host "  State is now: $($service.State)"
+
+    while ($service.State -ne 'Stopped') {
+
+      Start-Sleep -Milliseconds 250
+      $service = Get-WMIObject -class Win32_Service -Filter $filter
+      Write-Host "  State is now: $($service.State)"
+    }
+  }
+
+  # Now, start it
+
   Write-Host "Starting service.."
 
   $response = $service.StartService()
@@ -238,20 +195,54 @@ function Set-ServiceUser {
     Write-Host "  State is now: $($service.State)"
   }
 
-  Write-Host "Service `"$serviceName`" is now running as `"$($service.StartName)`""
+  Write-Host "Service `"$name`" is now running as `"$($service.StartName)`"."
+}
+
+function Confirm-Service {
+  param([string] $name)
+
+  #Write-Host "Confirm-Service -name `"$name`""
+  Write-Host "Waiting a moment to confirm the`"$name`" service.."
+
+  # If the service is going to fail, it's likely going to fail within the first second.
+
+  # Wait a second
+  Start-Sleep -Milliseconds 1000
+
+  # Create a filter to query for the service by
+
+  $filter = "Name='$name'"
+
+  # Query for the service, wait a second if we can't find it right away
+
+  $attempt = 0
+  $maxAttempts = 10
+  $service = $null
+
+  while (($null -eq $service -and $attempt -le ($maxAttempts - 1))) {
+
+    if ($attempt -ne 0) {
+      Start-Sleep -Milliseconds 250
+      Write-Host "Attempt #$($attempt + 1) to locate `"$name`" service.."
+    }
+
+    $service = Get-WMIObject -class Win32_Service -Filter $filter
+
+    $attempt = $attempt + 1
+  }
+
+  if ($null -eq $service) {
+    throw "Could not find `"$name`" service after $maxAttempts attempts."
+  }
+
+  Write-Host "Service `"$name`":"
   Write-Host "  State: $($service.State)"
   Write-Host "  Status: $($service.Status)"
   Write-Host "  Started: $($service.Started)"
   Write-Host "  Start Mode: $($service.StartMode)"
   Write-Host "  Service Type: $($service.ServiceType)"
+  Write-Host "  Start Name: $($service.StartName)"
 }
-
-function Set-PM2-Service-Account {
-  Write-Host "Changing PM2 to run as `"$User`""
-  Set-ServiceUser -serviceName "pm2.exe" -username $User -pass ""
-}
-
-# https://docs.microsoft.com/en-us/windows/win32/cimwin32prov/startservice-method-in-class-win32-service
 function Get-Service-Error-For-Code {
   param([int] $code = 0)
 
@@ -285,23 +276,59 @@ function Get-Service-Error-For-Code {
   }
 }
 
-$env:PM2_HOME = $Directory
-$env:PM2_SERVICE_PM2_DIR = "$(npm config get prefix --global)\node_modules\pm2\index.js"
-# $env:PM2_SERVICE_SCRIPTS = " $Directory\ecosystem.json"
 
-[Environment]::SetEnvironmentVariable("PM2_HOME", $env:PM2_HOME, "Machine")
-[Environment]::SetEnvironmentVariable("PM2_SERVICE_PM2_DIR", $env:PM2_SERVICE_PM2_DIR, "Machine")
-# [Environment]::SetEnvironmentVariable("PM2_SERVICE_SCRIPTS", $env:PM2_SERVICE_SCRIPTS, "Machine")
+Write-Host "=== Creating Service ==="
 
-[Environment]::SetEnvironmentVariable("SET_PM2_HOME", "true", "Machine")
-[Environment]::SetEnvironmentVariable("SET_PM2_SERVICE_PM2_DIR", "true", "Machine")
-[Environment]::SetEnvironmentVariable("SET_PM2_SERVICE_SCRIPTS", "false", "Machine")
+# Discern where pm2 is installed
+# Presumably this should be C:\ProgramData\npm\npm\, but we don't want to make any assumptions
+Write-Host "Determining pm2 installation directory.."
+$PM2_INSTALL_DIRECTORY = "$(npm config get prefix --global)\node_modules\pm2"
 
-& New-PM2-Home
-& Set-NPM-Folder-Permissions
-& Set-Daemon-Permissions
-& Install-PM2-Service
-& Set-PM2-Service-Account
+# Query for the name of the Local Service user by its security identifier
+# https://support.microsoft.com/en-us/help/243330/well-known-security-identifiers-in-windows-operating-systems
+# In English, this is "NT AUTHORITY\LOCAL SERVICE", but in Norwegian it's "NT-MYNDIGHET\LOKAL TJENESTE"
+Write-Host "Determining Local Service user name (`"S-1-5-19`").."
+$localServiceSID = New-Object System.Security.Principal.SecurityIdentifier("S-1-5-19")
+$ServiceUser = ($localServiceSID.Translate([System.Security.Principal.NTAccount])).Value
+
+# Print out configuration
+Write-Host "Configuration:"
+Write-Host "  PM2_HOME:              $PM2_HOME"
+Write-Host "  PM2_SERVICE_DIRECTORY: $PM2_SERVICE_DIRECTORY"
+Write-Host "  PM2_INSTALL_DIRECTORY: $PM2_INSTALL_DIRECTORY"
+Write-Host "  Service User:          $ServiceUser"
+Write-Host ""
+
+# Set the environmental variables we need (PM2_HOME, PM2_SERVICE_DIRECTORY and PM2_INSTALL_DIRECTORY) on a machine level
+Set-Env
+
+# Create the pm2\home and pm2\service folders
+New-Directory -Directory $PM2_HOME
+New-Directory -Directory $PM2_SERVICE_DIRECTORY
+
+# Copy the service source code into the pm2\service folder, and link node-windows
+Install-Service-Files
+
+# Set permissions on pm2\home and pm2\service
+Set-Permissions -Directory $PM2_HOME -User $ServiceUser
+Set-Permissions -Directory $PM2_SERVICE_DIRECTORY -User $ServiceUser
+
+# Create the service itself
+# Install-Service -Directory $PM2_SERVICE_DIRECTORY -User $ServiceUser
+Install-Service -Directory $PM2_SERVICE_DIRECTORY
+# There is currently (May 2020) an issue with the way that node-windows uses user credentials.
+# Sending it the local service user fails, so instead we let it start as LocalSystem
+# --then switch the user the service runs as afterwards
+
+# Do this again, because installing the service adds a few files
+Set-Permissions -Directory $PM2_HOME -User $ServiceUser
+Set-Permissions -Directory $PM2_SERVICE_DIRECTORY -User $ServiceUser
+
+# Switch the service user to Local Service
+Set-ServiceUser -name "pm2.exe" -username $ServiceUser -pass ""
+
+# Confirm the service is running
+Confirm-Service -name "pm2.exe"
 
 # Finally, invoke pm2 directly
 pm2 list

@@ -10,7 +10,8 @@ if (Get-Command "pm2" -ErrorAction SilentlyContinue) {
 
 } else {
 
-  Write-Host "Command `"pm2`" not found, potentially because it has already been uninstalled. Not removing log rotation, since pm2 itself has alrady been removed."
+  Write-Host "Command `"pm2`" not found, potentially because it has already been uninstalled."
+  Write-Host "Not removing log rotation, since pm2 itself has already been removed."
 }
 
 Write-Host "=== Remove Log Rotation Complete ==="

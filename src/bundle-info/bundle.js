@@ -14,7 +14,7 @@ const exec = promisify(require('child_process').exec);
 // const colors = require('simple-log-colors');
 const colors = require('./colors');
 
-const { name, version, dependencies } = require('../../package.json');
+const { name, version } = require('../../package.json');
 
 const path = 'bundle.json';
 
@@ -30,6 +30,8 @@ async function info() {
     npm = stdout.trim();
   }
 
+  const node = process.version;
+
   const time = new Date().getTime() / 1000;
   const date = new Date().toLocaleDateString();
 
@@ -40,13 +42,12 @@ async function info() {
     time,
     date,
 
-    node: process.version,
+    node,
     npm,
 
     package: {
       name,
-      version,
-      dependencies
+      version
     },
 
     os: {

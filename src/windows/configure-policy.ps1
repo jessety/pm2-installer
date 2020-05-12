@@ -21,13 +21,13 @@ if ($Force -eq $false) {
   $confirmation = Read-Host -Prompt "Would you like to update it to `"$preferred`"? (Y/N)"
 
   while ($confirmation -ne "y" -and $confirmation -ne "Y") {
-    
+
     if ($confirmation -eq 'n' -or $confirmation -eq 'N') {
       Write-Output $false
       exit
     }
 
-     $confirmation = Read-Host -Prompt "(Y/N)"
+    $confirmation = Read-Host -Prompt "(Y/N)"
   }
 }
 

@@ -24,7 +24,7 @@ if [ $? -eq 0 ]; then
 
   pm2 install $pm2_logrotate_package
 
-else 
+else
 
   echo "Cannot connect to the npm registry. Checking for offline bundle.."
 

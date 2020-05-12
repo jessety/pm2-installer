@@ -1,0 +1,9 @@
+{
+  "name": "pm2-service",
+  "description": "Node process manager service - created by pm2-installer",
+  "main": "index.js",
+  "type": "commonjs",
+  "homepage": "https://github.com/jessety/pm2-installer",
+  "license": "MIT",
+  "private": true
+}

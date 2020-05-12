@@ -3,8 +3,8 @@ Write-Host "=== Bundle ==="
 $Epoch = Get-Date
 
 $pm2_package = "$(node src/tools/echo-dependency.js pm2)"
-$pm2_service_package = "$(node src/tools/echo-dependency.js pm2-windows-service)";
 $pm2_logrotate_package = "$(node src/tools/echo-dependency.js pm2-logrotate)"
+$node_windows_package = "$(node src/tools/echo-dependency.js node-windows windows)"
 
 $cache_folder = ".\.npm_cache";
 $cache_archive_tar=".\bundle.tar.gz"
@@ -42,9 +42,9 @@ Write-Host "Populating cache folder with all dependencies.."
 
 $BeforePopulation = Get-Date
 
-npm install --global-style --force --cache $cache_folder --shrinkwrap false --loglevel=error --no-audit --no-fund $pm2_package
-npm install --global-style --force --cache $cache_folder --shrinkwrap false --loglevel=error --no-audit --no-fund $pm2_service_package
-npm install --global-style --force --cache $cache_folder --shrinkwrap false --loglevel=error --no-audit --no-fund $pm2_logrotate_package
+npm install --no-save --global-style --force --cache $cache_folder --shrinkwrap false --loglevel=error --no-audit --no-fund $pm2_package
+npm install --no-save --global-style --force --cache $cache_folder --shrinkwrap false --loglevel=error --no-audit --no-fund $pm2_logrotate_package
+npm install --no-save --global-style --force --cache $cache_folder --shrinkwrap false --loglevel=error --no-audit --no-fund $node_windows_package
 
 Write-Host "Populating cache took $([Math]::Floor($(Get-Date).Subtract($BeforePopulation).TotalSeconds)) seconds."
 
