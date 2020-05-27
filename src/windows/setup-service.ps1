@@ -317,15 +317,19 @@ Set-Permissions -Directory $PM2_SERVICE_DIRECTORY -User $ServiceUser
 # Install-Service -Directory $PM2_SERVICE_DIRECTORY -User $ServiceUser
 Install-Service -Directory $PM2_SERVICE_DIRECTORY
 # There is currently (May 2020) an issue with the way that node-windows uses user credentials.
-# Sending it the local service user fails, so instead we let it start as LocalSystem
-# --then switch the user the service runs as afterwards
+# Sending it the local service user fails, so instead:
+# - Create the service to run as LocalSystem, but don't start it
+# - Update the service to run as the LocalService user
+# - Start the service
+# Starting the service as LocalSystem then attempting to change it to LocalService causes permissions issues
+# However, if the service never starts until after being updated to run as LocalService, it works perfectly
 
 # Do this again, because installing the service adds a few files
 Set-Permissions -Directory $PM2_HOME -User $ServiceUser
 Set-Permissions -Directory $PM2_SERVICE_DIRECTORY -User $ServiceUser
 
 # Switch the service user to Local Service
-Set-ServiceUser -name "pm2.exe" -username $ServiceUser -pass ""
+Set-ServiceUser -name "pm2.exe" -username "NT AUTHORITY\LocalService" -pass ""
 
 # Confirm the service is running
 Confirm-Service -name "pm2.exe"
