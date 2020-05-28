@@ -1,4 +1,4 @@
-# http://editorconfig.org
+# https://editorconfig.org
 
 root = true
 
@@ -16,5 +16,5 @@ trim_trailing_whitespace = false
 [*.{diff,patch}]
 trim_trailing_whitespace = false
 
-[*.{bat,cmd}]
+[*.{ps1,psm1,bat,cmd}]
 end_of_line = crlf
