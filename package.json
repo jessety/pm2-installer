@@ -15,8 +15,9 @@
   "scripts": {
     "postinstall": "echo 'Installing this package is not necessary. Run \"npm run setup\" to install pm2.'",
     "lint": "eslint . && editorconfig-checker",
-    "print-host": "node ./src/bundle-info/current.js",
-    "print-config": "PowerShell -NoProfile -ExecutionPolicy Bypass src\\windows\\configure-print.ps1",
+    "info": "node ./src/bundle-info/current.js",
+    "info-config": "PowerShell -NoProfile -ExecutionPolicy Bypass src\\windows\\info-config.ps1",
+    "info-service": "PowerShell -NoProfile -ExecutionPolicy Bypass src\\windows\\info-service.ps1",
     "bundle": "node ./src/tools/script-for-os.js",
     "bundle:windows": "PowerShell -NoProfile -ExecutionPolicy Bypass src\\windows\\bundle.ps1",
     "bundle:unix": "bash ./src/unix/bundle.sh",

@@ -1,7 +1,5 @@
 ﻿param([string] $name = "pm2.exe")
 
-Write-Host "Confirm-Service -name `"$name`""
-
 # Create a filter to query for the service by
 
 $filter = "Name='$name'"
