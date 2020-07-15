@@ -3,6 +3,7 @@ node_modules
 *.swp
 **/.DS_Store
 .npm_cache
+RELEASE.md
 bundle.json
 bundle.tar.gz
 bundle.zip
