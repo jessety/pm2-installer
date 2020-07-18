@@ -1,4 +1,8 @@
-Write-Host "`n=== Printing Configuration ==="
+Write-Host "`n=== Printing npm Configuration ==="
+
+# Print out the versions of this package, node, and npm
+
+node src\bundle-info\current.js
 
 $spacingLength = 24;
 

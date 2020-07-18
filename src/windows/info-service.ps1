@@ -1,5 +1,11 @@
 ﻿param([string] $name = "pm2.exe")
 
+Write-Host "`n=== Printing Service Info ==="
+
+# Print out the versions of this package, node, and npm
+
+node src\bundle-info\current.js
+
 # Create a filter to query for the service by
 
 $filter = "Name='$name'"
@@ -26,7 +32,7 @@ if ($null -eq $service) {
   throw "Could not find `"$name`" service after $maxAttempts attempts."
 }
 
-Write-Host "Found `"$name`" service:"
+Write-Host "`nFound `"$name`" service:"
 
 Write-Host "  State: $($service.State)"
 Write-Host "  Status: $($service.Status)"
