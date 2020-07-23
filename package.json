@@ -46,7 +46,7 @@
     "remove:default": "echo 'ERROR: Could not detect host platform'"
   },
   "windowsDependencies": {
-    "node-windows": "^1.0.0-beta.2"
+    "node-windows": "^1.0.0-beta.1"
   },
   "globalDependencies": {
     "pm2": "4.4.0",
