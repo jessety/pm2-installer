@@ -27,7 +27,7 @@ After that, `pm2` will be running in the background the `Local Service` user. It
 
 ## Install
 
-Download the latest version [here](https://github.com/jessety/pm2-installer/archive/master.zip).
+Download the latest version [here](https://github.com/jessety/pm2-installer/archive/main.zip).
 
 Copy the entire `pm2-installer` directory onto the target machine, then run:
 
