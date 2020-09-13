@@ -3,6 +3,15 @@ Write-Host "=== Remove ==="
 # Load the latest path
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
 
+# Confirm this script is running with administrator rights
+$continue = &".\src\windows\check-administrator.ps1" | Select-Object -Last 1
+
+if ($continue -eq 'n') {
+  Write-Host "Administrator privileges are required to remove the service.`nPlease run this script in an admin prompt.`n"
+  Write-Host "=== Remove Canceled ==="
+  exit
+}
+
 # Remove logrotate module
 & .\src\windows\remove-logrotate.ps1
 

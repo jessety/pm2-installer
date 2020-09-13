@@ -6,14 +6,14 @@ $cache = "$(npm config --global get cache)"
 $valid = $true
 
 if ($prefix -like "*\AppData\Roaming\*") {
-  Write-Host "Global npm prefix location does not seem to be in a global location: $prefix"
+  Write-Warning "Global npm prefix location does not seem to be in a global location: $prefix"
   $valid = $false
 } else {
   Write-Host "Global npm prefix location appears valid: $prefix"
 }
 
 if ($cache -like "*\AppData\Roaming\*") {
-  Write-Host "Global npm cache location does not seem to be in a global location: $cache"
+  Write-Warning "Global npm cache location does not seem to be in a global location: $cache"
   $valid = $false
 } else {
   Write-Host "Global npm cache location appears valid: $cache"
@@ -23,10 +23,10 @@ if ($cache -like "*\AppData\Roaming\*") {
 
 if ($valid -eq $false) {
 
-  Write-Host "npm configuration does not appear valid. The npm prefix and cache must be somewhere accessible to the LocalService user."
+  Write-Host "`nThe npm prefix and cache must be somewhere accessible to the LocalService user, or the service will not run."
   Write-Host "(To fix this automatically, execute ``npm run configure`` beforehand to use C:\ProgramData\npm)"
 
-  $confirmation = Read-Host -Prompt "Are you sure you want to proceed anyway? (Y/N)"
+  $confirmation = Read-Host -Prompt "Are you absolutely sure you want to proceed anyway? (Y/N)"
 
   while ($confirmation -ne "y" -and $confirmation -ne "Y") {
 

@@ -3,8 +3,17 @@ Write-Host "=== Setup ==="
 # Load the latest path
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
 
-# Check the npm configuration to ensure the prefix isn't in the current user's appdata folder
-$continue = &".\src\windows\configure-check.ps1" | Select-Object -Last 1
+# Confirm this script is running with administrator rights
+$continue = &".\src\windows\check-administrator.ps1" | Select-Object -Last 1
+
+if ($continue -eq 'n') {
+  Write-Host "Administrator privileges are required to install the service.`nPlease run this script in an admin prompt.`n"
+  Write-Host "=== Setup Canceled ==="
+  exit
+}
+
+# Check the npm configuration to confirm the prefix isn't in the current user's appdata folder
+$continue = &".\src\windows\check-configuration.ps1" | Select-Object -Last 1
 
 if ($continue -eq 'n') {
   Write-Host "=== Setup Canceled ==="
