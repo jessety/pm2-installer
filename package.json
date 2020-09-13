@@ -49,7 +49,7 @@
     "node-windows": "^1.0.0-beta.1"
   },
   "globalDependencies": {
-    "pm2": "4.4.0",
+    "pm2": "4.4.1",
     "pm2-logrotate": "2.7.0"
   },
   "devDependencies": {
