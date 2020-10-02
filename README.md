@@ -45,7 +45,7 @@ npm run setup
 
 That's it.
 
-## Offline Install
+### Offline Install
 
 `pm2-installer` is also designed to function without an internet connection. It does this by creating a cache on an internet-connected build machine, then installing from that cache when run on the offline deployment machine.
 
@@ -62,6 +62,20 @@ npm run setup
 ```
 
 `pm2-installer` will check if it can contact the npm registry and install online if possible, or use the offline cache if not.
+
+### Windows Install
+
+There are a couple additional challenges when installing on a fresh Windows machine. The `npm` global directory is not accessible to other users by default, which means the `Local Service` user will not be able to locate the `pm2` executable. Additionally, if the machine's PowerShell execution policy is `Undefined` or `Restricted`, invoking `pm2` in PowerShell will fail- even though the setup script unblocks `pm2.ps1`.
+
+`pm2-installer` includes two additional scripts to automatically fix the above issues. Invoking `npm run configure` will create the `C:\ProgramData\npm\`, and set `npm` to use `prefix` and `cache` locations in that directory. Running `npm run configure-policy` checks the machine's PowerShell execution policy and if it is either `undefined` or `Restricted`, updates it to `RemoteSigned`.
+
+Open an elevated terminal (e.g. right click and select "Run as Admin") and run the following commands:
+
+```pwsh
+npm run configure
+npm run configure-policy
+npm run setup
+```
 
 ## Removal
 
