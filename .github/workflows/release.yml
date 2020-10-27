@@ -3,7 +3,7 @@ name: release
 on:
   push:
     tags:
-      - 'v*' # Push events for tags matching v*, e.g. v1.0, v20.15.10
+      - 'v*' # Wait for push events with tags matching v*, e.g. v1.0, v20.15.10, v0.3.1
 
 jobs:
   build:
@@ -14,26 +14,24 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0 # git history won't be fetched without this option
+          fetch-depth: 0 # Git history won't be fetched without this option
 
       - name: Setup Node
         uses: actions/setup-node@v1
 
-      - name: Install Dependencies
-        run: npm install
+      - name: Install dependencies
+        run: npm install --no-save auto-changelog@2.x.x
 
-      - name: Generate Release Notes
-        run: npm run changelog-release
-
-      - name: Parse Release Notes
-        id: parse
+      - name: Generate release notes # To change the release notes format, edit RELEASE.md.hbs
+        id: notes
         run: |
+          npx auto-changelog --template RELEASE.md.hbs --output RELEASE.md --commit-limit false
           NOTES=$(cat RELEASE.md)
           NOTES="${NOTES//'%'/'%25'}"
           NOTES="${NOTES//$'\n'/'%0A'}"
           echo "::set-output name=notes::$NOTES"
 
-      - name: Create Release
+      - name: Create release
         id: create_release
         uses: actions/create-release@v1
         env:
@@ -41,6 +39,6 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: ${{ github.ref }}
-          body: ${{ steps.parse.outputs.notes }}
-          draft: true
+          body: ${{ steps.notes.outputs.notes }}
+          draft: false
           prerelease: false
