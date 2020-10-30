@@ -121,3 +121,7 @@ process.on('uncaughtException', async error => {
   output.log(`${new Date().toLocaleString()} service\\index.js Uncaught Exception`, error.message, (error.stack !== undefined) ? error.stack : undefined);
   process.exit(1);
 });
+
+process.on('unhandledRejection', async error => {
+  output.log(`${new Date().toLocaleString()} service\\index.js Unhandled Rejection`, error.message, (error.stack !== undefined) ? error.stack : undefined);
+});
