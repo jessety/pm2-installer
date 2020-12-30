@@ -19,13 +19,10 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v1
 
-      - name: Install dependencies
-        run: npm install --no-save auto-changelog@2.x.x
-
       - name: Generate release notes # To change the release notes format, edit RELEASE.md.hbs
         id: notes
         run: |
-          npx auto-changelog --template RELEASE.md.hbs --output RELEASE.md --commit-limit false
+          npx auto-changelog@2.x.x --template RELEASE.md.hbs --output RELEASE.md --commit-limit false
           NOTES=$(cat RELEASE.md)
           NOTES="${NOTES//'%'/'%25'}"
           NOTES="${NOTES//$'\n'/'%0A'}"
