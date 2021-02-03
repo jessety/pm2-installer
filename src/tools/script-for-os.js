@@ -9,14 +9,41 @@ const { spawn } = require('child_process');
 const { scripts } = require(path.join(process.cwd(), 'package.json'));
 const platform = os.platform();
 
-if (!process.env['npm_config_argv']) {
+if (process.env['npm_config_argv'] === undefined && process.env['npm_lifecycle_script'] === undefined) {
   console.error('script-for-os is intended for use from an npm script only.');
-  return;
+  process.exit(1);
 }
 
-const { original: parameters } = JSON.parse(process.env['npm_config_argv']);
+let targetScriptName;
+let scriptParameters;
 
-const [, targetScriptName, ...scriptParameters] = parameters;
+if (process.env['npm_config_argv'] !== undefined) {
+
+  // npm < 7
+
+  const { original: parameters } = JSON.parse(process.env['npm_config_argv']);
+
+  [, targetScriptName, ...scriptParameters] = parameters;
+
+} else if (process.env['npm_lifecycle_script'] !== undefined && process.env['npm_lifecycle_event'] !== undefined) {
+
+  // npm >= 7
+
+  const lifecycle = process.env['npm_lifecycle_script'];
+
+  scriptParameters = lifecycle.slice(lifecycle.indexOf('.js') + 4)
+    .split(' ')
+    .map(parameter => {
+
+      if (parameter.length > 2) {
+        return parameter.slice(1, -1);
+      }
+
+      return parameter;
+    });
+
+  targetScriptName = process.env['npm_lifecycle_event'];
+}
 
 const platformKeys = [platform];
 
@@ -50,7 +77,7 @@ for (const platform of platformKeys) {
 
 if (scriptName === undefined) {
   console.error(`script-for-os: Could not find script for "${targetScriptName}" to execute for this platform. Expected to find one of these in package.json/scripts:\n`, platformKeys.map(key => `${targetScriptName}:${key}`));
-  return;
+  process.exit(1);
 }
 
 let child;
