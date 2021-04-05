@@ -18,11 +18,11 @@ if [ $? -eq 0 ]; then
 
   echo "Installing pm2.."
 
-  npm install --global --loglevel=error --no-audit --no-fund $pm2_package
+  npm install --global --loglevel=error --no-audit --no-fund "$pm2_package"
 
   echo "Installing pm2-logrotate.."
 
-  pm2 install $pm2_logrotate_package
+  pm2 install "$pm2_logrotate_package"
 
 else
 
@@ -44,11 +44,11 @@ else
     npm --offline --cache $cache_folder --optional cache verify
 
     echo "Installing packages offline.."
-    npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error --no-audit --no-fund $pm2_package
-    npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error --no-audit --no-fund $pm2_logrotate_package
+    npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error --no-audit --no-fund "$pm2_package"
+    npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error --no-audit --no-fund "$pm2_logrotate_package"
 
     echo "Installing pm2-logrotate.."
-    cd "$(npm config get prefix)/lib/node_modules/pm2-logrotate/"
+    cd "$(npm config get prefix)/lib/node_modules/pm2-logrotate/" || exit
     pm2 install . --silent
     pm2 save --force
 
@@ -58,11 +58,11 @@ else
 
     echo "Installing pm2.."
 
-    npm install --global --loglevel=error --no-audit --no-fund $pm2_package
+    npm install --global --loglevel=error --no-audit --no-fund "$pm2_package"
 
     echo "Installing pm2-logrotate.."
 
-    pm2 install $pm2_logrotate_package
+    pm2 install "$pm2_logrotate_package"
 
   fi
 fi
