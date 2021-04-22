@@ -334,7 +334,4 @@ Set-ServiceUser -name "pm2.exe" -username "NT AUTHORITY\LocalService" -pass ""
 # Confirm the service is running
 Confirm-Service -name "pm2.exe"
 
-# Finally, invoke pm2 directly
-pm2 list
-
 Write-Host "=== Creating Service Complete ==="
