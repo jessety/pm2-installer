@@ -78,14 +78,19 @@ function Install-Service-Files {
 }
 
 function Install-Service {
-  param([string] $Directory, [string] $User)
+  param(
+    [string] $Directory,
+    [string] $Name = "PM2",
+    [string] $Description = "Node process manager",
+    [string] $User
+  )
 
   Write-Host "Running Node service install script.."
 
   $wd = (Get-Item -Path '.\' -Verbose).FullName
 
   Set-Location $PM2_SERVICE_DIRECTORY
-  node "$wd\src\windows\service-management\install.js" $Directory $User
+  node "$wd\src\windows\service-management\install.js" $Directory $Name $Description $User
   Set-Location $wd
 
   if ($? -ne $True) {
@@ -315,7 +320,7 @@ Set-Permissions -Directory $PM2_SERVICE_DIRECTORY -User $ServiceUser
 
 # Create the service itself
 # Install-Service -Directory $PM2_SERVICE_DIRECTORY -User $ServiceUser
-Install-Service -Directory $PM2_SERVICE_DIRECTORY
+Install-Service -Directory $PM2_SERVICE_DIRECTORY # -Name $ServiceName -Description $ServiceDescription
 # There is currently (May 2020) an issue with the way that node-windows uses user credentials.
 # Sending it the local service user fails, so instead:
 # - Create the service to run as LocalSystem, but don't start it
