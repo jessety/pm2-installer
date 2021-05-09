@@ -14,7 +14,7 @@
   },
   "scripts": {
     "postinstall": "echo 'Installing this package is not necessary. Run \"npm run setup\" to install pm2.'",
-    "lint": "eslint . && editorconfig-checker",
+    "lint": "eslint . && editorconfig-checker .",
     "info": "node ./src/bundle-info/current.js",
     "info-config": "PowerShell -NoProfile -ExecutionPolicy Bypass src\\windows\\info-config.ps1",
     "info-service": "PowerShell -NoProfile -ExecutionPolicy Bypass src\\windows\\info-service.ps1",
@@ -53,7 +53,7 @@
   },
   "devDependencies": {
     "@jessety/eslint-config": "^1.0.5",
-    "editorconfig-checker": "^3.0.4",
+    "editorconfig-checker": "^4.0.2",
     "eslint": "^6.8.0"
   }
 }
