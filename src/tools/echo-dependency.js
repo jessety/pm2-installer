@@ -4,9 +4,9 @@
 
 const pkg = require('../../package.json');
 
-let [identifier, type] = process.argv.slice(2);
+const [identifier, type] = process.argv.slice(2);
 
-let dependencies = pkg.dependencies;
+let { dependencies } = pkg.dependencies;
 
 if (type === 'dev') {
   dependencies = pkg.devDependencies;
