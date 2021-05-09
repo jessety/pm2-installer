@@ -6,20 +6,10 @@ const pkg = require('../../package.json');
 
 let [identifier, type] = process.argv.slice(2);
 
-if (type === undefined) {
-  type = 'global';
-}
+let dependencies = pkg.dependencies;
 
-let dependencies = {};
-
-if (type === 'windows') {
-  dependencies = pkg.windowsDependencies;
-} else if (type === 'global') {
-  dependencies = pkg.globalDependencies;
-} else if (type === 'dev') {
+if (type === 'dev') {
   dependencies = pkg.devDependencies;
-} else {
-  process.exit();
 }
 
 if (identifier === undefined) {
