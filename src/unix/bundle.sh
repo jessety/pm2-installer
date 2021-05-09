@@ -12,6 +12,7 @@ cache_archive="./bundle.tar.gz"
 rm -rf $cache_folder
 mkdir -p $cache_folder
 rm -rf $cache_archive
+rm -rf node_modules
 
 echo "Populating cache with all dependencies.."
 npm install --no-save --global-style --force --cache $cache_folder --loglevel=error --no-audit --no-fund "$pm2_package"

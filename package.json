@@ -12,6 +12,10 @@
     "type": "git",
     "url": "git+https://github.com/jessety/pm2-installer.git"
   },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/jessety"
+  },
   "scripts": {
     "postinstall": "echo 'Installing this package is not necessary. Run \"npm run setup\" to install pm2.'",
     "lint": "eslint . && editorconfig-checker .",
@@ -44,12 +48,10 @@
     "remove:unix": "bash ./src/unix/remove.sh",
     "remove:default": "echo 'ERROR: Could not detect host platform'"
   },
-  "windowsDependencies": {
-    "node-windows": "^1.0.0-beta.1"
-  },
-  "globalDependencies": {
+  "dependencies": {
     "pm2": "4.5.6",
-    "pm2-logrotate": "2.7.0"
+    "pm2-logrotate": "2.7.0",
+    "node-windows": "^1.0.0-beta.1"
   },
   "devDependencies": {
     "@jessety/eslint-config": "^1.0.5",
