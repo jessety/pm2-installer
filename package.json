@@ -49,9 +49,9 @@
     "remove:default": "echo 'ERROR: Could not detect host platform'"
   },
   "dependencies": {
-    "pm2": "5.1.0",
-    "pm2-logrotate": "2.7.0",
-    "node-windows": "1.0.0-beta.1"
+    "@jessety/pm2-logrotate": "^2.7.1",
+    "node-windows": "1.0.0-beta.1",
+    "pm2": "5.1.0"
   },
   "devDependencies": {
     "@jessety/eslint-config": "^1.0.5",

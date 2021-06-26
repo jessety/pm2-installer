@@ -3,7 +3,7 @@ Write-Host "=== Bundle ==="
 $Epoch = Get-Date
 
 $pm2_package = "$(node src/tools/echo-dependency.js pm2)"
-$pm2_logrotate_package = "$(node src/tools/echo-dependency.js pm2-logrotate)"
+$pm2_logrotate_package = "$(node src/tools/echo-dependency.js @jessety/pm2-logrotate)"
 $node_windows_package = "$(node src/tools/echo-dependency.js node-windows)"
 
 $cache_folder = ".\.npm_cache";
@@ -45,7 +45,6 @@ $BeforePopulation = Get-Date
 npm install --no-save --global-style --force --cache $cache_folder --shrinkwrap false --loglevel=error --no-audit --no-fund $pm2_package
 npm install --no-save --global-style --force --cache $cache_folder --shrinkwrap false --loglevel=error --no-audit --no-fund $pm2_logrotate_package
 npm install --no-save --global-style --force --cache $cache_folder --shrinkwrap false --loglevel=error --no-audit --no-fund $node_windows_package
-
 Write-Host "Populating cache took $([Math]::Floor($(Get-Date).Subtract($BeforePopulation).TotalSeconds)) seconds."
 
 if (Get-Command "tar.exe" -ErrorAction SilentlyContinue) {
