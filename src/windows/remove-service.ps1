@@ -2,6 +2,7 @@ Write-Host "=== Remove Service ==="
 
 $PM2_HOME = $env:PM2_HOME;
 $PM2_SERVICE_DIRECTORY = $env:PM2_SERVICE_DIRECTORY;
+$PM2_SERVICE_NAME = $env:PM2_SERVICE_NAME;
 
 function Stop-Service {
   param([string] $name)
@@ -85,7 +86,7 @@ if (($null -ne $PM2_SERVICE_DIRECTORY) -and (Test-Path $PM2_SERVICE_DIRECTORY)) 
 
 Write-Host "Running Node service uninstall script.."
 
-node "$wd\src\windows\service-management\uninstall.js" $PM2_SERVICE_DIRECTORY
+node "$wd\src\windows\service-management\uninstall.js" $PM2_SERVICE_DIRECTORY $PM2_SERVICE_NAME
 
 if ($? -ne $True) {
   Set-Location $wd

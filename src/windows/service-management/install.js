@@ -22,7 +22,7 @@ for (const key of ['PM2_HOME', 'PM2_INSTALL_DIRECTORY', 'PM2_SERVICE_DIRECTORY']
   }
 }
 
-let [directory, user, name, description] = process.argv.slice(2);
+let [directory, name, description, user] = process.argv.slice(2);
 
 // Pull the process directory, service name, and service description from the script parameters or pricess env, or use a default
 directory = directory || process.env.PM2_SERVICE_DIRECTORY || 'c:\\ProgramData\\pm2\\service\\';
