@@ -45,6 +45,8 @@ npm run setup
 
 That's it.
 
+> NOTE: Running `npm install` is not necessary, unless you're developing `pm2-installer` itself and want to lint the project.
+
 ### Offline Install
 
 `pm2-installer` is also designed to function without an internet connection. It does this by creating a cache on an internet-connected build machine, then installing from that cache when run on the offline deployment machine.

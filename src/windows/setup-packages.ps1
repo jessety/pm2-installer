@@ -3,8 +3,8 @@ Write-Host "=== Install Packages ==="
 $Epoch = Get-Date
 
 $pm2_package = "$(node src/tools/echo-dependency.js pm2)"
-$pm2_logrotate_package = "$(node src/tools/echo-dependency.js pm2-logrotate)"
-$node_windows_package = "$(node src/tools/echo-dependency.js node-windows windows)"
+$pm2_logrotate_package = "$(node src/tools/echo-dependency.js @jessety/pm2-logrotate)"
+$node_windows_package = "$(node src/tools/echo-dependency.js node-windows)"
 
 $cache_folder = ".\.npm_cache"
 $cache_archive_tar = ".\bundle.tar.gz"

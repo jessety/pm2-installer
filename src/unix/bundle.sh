@@ -3,7 +3,7 @@
 echo "=== Bundle ==="
 
 pm2_package=$(node src/tools/echo-dependency.js pm2)
-pm2_logrotate_package=$(node src/tools/echo-dependency.js pm2-logrotate)
+pm2_logrotate_package=$(node src/tools/echo-dependency.js @jessety/pm2-logrotate)
 
 cache_folder="./.npm_cache";
 cache_archive="./bundle.tar.gz"
@@ -12,6 +12,7 @@ cache_archive="./bundle.tar.gz"
 rm -rf $cache_folder
 mkdir -p $cache_folder
 rm -rf $cache_archive
+rm -rf node_modules
 
 echo "Populating cache with all dependencies.."
 npm install --no-save --global-style --force --cache $cache_folder --loglevel=error --no-audit --no-fund "$pm2_package"

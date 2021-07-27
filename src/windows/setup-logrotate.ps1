@@ -5,7 +5,7 @@ node src\tools\npm-online.js
 
 if ($? -eq $True) {
 
-  $logrotate_package = "$(node src/tools/echo-dependency.js pm2-logrotate)"
+  $logrotate_package = "$(node src/tools/echo-dependency.js @jessety/pm2-logrotate)"
 
   Write-Host "Installing $logrotate_package online.."
 
@@ -13,7 +13,7 @@ if ($? -eq $True) {
 
 } else {
 
-  $logrotate_directory = "$(npm config get prefix)\node_modules\pm2-logrotate\"
+  $logrotate_directory = "$(npm config get prefix)\node_modules\@jessety\pm2-logrotate\"
 
   Write-Host "Installing pm2-logrotate locally in directory: $logrotate_directory"
 
