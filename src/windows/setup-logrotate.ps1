@@ -13,7 +13,7 @@ if ($? -eq $True) {
 
 } else {
 
-  $logrotate_directory = "$(npm config get prefix)\node_modules\pm2-logrotate\"
+  $logrotate_directory = "$(npm config get prefix)\node_modules\@jessety\pm2-logrotate\"
 
   Write-Host "Installing pm2-logrotate locally in directory: $logrotate_directory"
 
