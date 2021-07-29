@@ -119,7 +119,7 @@ if ($? -eq $True) {
 }
 
 Write-Host "Linking node-windows.."
-npm link node-windows --loglevel=error --no-fund --no-audit
+npm link node-windows --loglevel=error --no-fund --no-audit --production
 
 # Enable execution of pm2's powershell script, so the current user can interact with the pm2 powershell script
 $script_path = "$(npm config get prefix)\pm2.ps1"
