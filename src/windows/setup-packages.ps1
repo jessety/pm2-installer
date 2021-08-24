@@ -34,6 +34,9 @@ if ($? -eq $True) {
 
   Write-Host "Installing packages took $([Math]::Floor($(Get-Date).Subtract($PriorToInstall).TotalSeconds)) seconds."
 
+  Write-Host "Linking node-windows.."
+  npm link node-windows --loglevel=error --no-fund --no-audit --production
+
 } elseif ((Test-Path $cache_archive_tar) -or (Test-Path $cache_archive_zip) -or (Test-Path $cache_folder)) {
 
   Write-Host "Cannot connect to the npm registry. Checking for offline bundle.."
@@ -107,6 +110,9 @@ if ($? -eq $True) {
 
   Write-Host "Installing packages took $([Math]::Floor($(Get-Date).Subtract($PriorToInstall).TotalSeconds)) seconds."
 
+  Write-Host "Linking node-windows.."
+  npm link node-windows --loglevel=error --no-fund --no-audit --production --offline
+
 } else {
 
   Write-Host "Cannot connect to the npm registry, and no offline bundle was found. Attempting install anyway.."
@@ -116,10 +122,10 @@ if ($? -eq $True) {
   npm install --global --loglevel=error --no-audit --no-fund $pm2_package
   npm install --global --loglevel=error --no-audit --no-fund $pm2_logrotate_package
   npm install --global --loglevel=error --no-audit --no-fund $node_windows_package
-}
 
-Write-Host "Linking node-windows.."
-npm link node-windows --loglevel=error --no-fund --no-audit
+  Write-Host "Linking node-windows.."
+  npm link node-windows --loglevel=error --no-fund --no-audit --production
+}
 
 # Enable execution of pm2's powershell script, so the current user can interact with the pm2 powershell script
 $script_path = "$(npm config get prefix)\pm2.ps1"
