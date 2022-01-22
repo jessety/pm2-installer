@@ -24,6 +24,8 @@ node src\tools\npm-online.js
 
 if ($? -eq $True) {
 
+  # We *can* connect to the npm registry
+
   Write-Host "Installing packages.."
 
   $PriorToInstall = Get-Date
@@ -35,7 +37,7 @@ if ($? -eq $True) {
   Write-Host "Installing packages took $([Math]::Floor($(Get-Date).Subtract($PriorToInstall).TotalSeconds)) seconds."
 
   Write-Host "Linking node-windows.."
-  npm link node-windows --loglevel=error --no-fund --no-audit --production
+  npm link node-windows --loglevel=error --no-fund --no-audit --production --only=production
 
 } elseif ((Test-Path $cache_archive_tar) -or (Test-Path $cache_archive_zip) -or (Test-Path $cache_folder)) {
 
@@ -111,7 +113,7 @@ if ($? -eq $True) {
   Write-Host "Installing packages took $([Math]::Floor($(Get-Date).Subtract($PriorToInstall).TotalSeconds)) seconds."
 
   Write-Host "Linking node-windows.."
-  npm link node-windows --loglevel=error --no-fund --no-audit --production --offline
+  npm link node-windows --loglevel=error --no-fund --no-audit --production --only=production --offline
 
 } else {
 
@@ -124,7 +126,7 @@ if ($? -eq $True) {
   npm install --global --loglevel=error --no-audit --no-fund $node_windows_package
 
   Write-Host "Linking node-windows.."
-  npm link node-windows --loglevel=error --no-fund --no-audit --production
+  npm link node-windows --loglevel=error --no-fund --no-audit --production --only=production
 }
 
 # Enable execution of pm2's powershell script, so the current user can interact with the pm2 powershell script
