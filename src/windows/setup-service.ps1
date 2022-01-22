@@ -329,7 +329,9 @@ Set-Permissions -Directory $PM2_HOME -User $ServiceUser
 Set-Permissions -Directory $PM2_SERVICE_DIRECTORY -User $ServiceUser
 
 # Switch the service user to Local Service
-Set-ServiceUser -name "pm2.exe" -username "NT AUTHORITY\LocalService" -pass ""
+$PM2ServiceAccount = ($Env:PM2_SERVICE_ACCOUNT, "NT AUTHORITY\LocalService" -ne $null )[0]
+$PM2ServiceAccountPassword = ($Env:PM2_SERVICE_ACCOUNT_PASSWORD, "" -ne $null )[0]
+Set-ServiceUser -name "pm2.exe" -username $PM2ServiceAccount -pass $PM2ServiceAccountPassword
 
 # Confirm the service is running
 Confirm-Service -name "pm2.exe"
