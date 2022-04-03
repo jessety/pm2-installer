@@ -10,3 +10,9 @@ updates:
       - dependency-type: "production"
     reviewers:
       - "jessety"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    reviewers:
+      - "jessety"
