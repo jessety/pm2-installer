@@ -48,7 +48,7 @@ else
     npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error --no-audit --no-fund "$pm2_logrotate_package"
 
     echo "Installing pm2-logrotate.."
-    cd "$(npm config get prefix)/lib/node_modules/pm2-logrotate/" || exit
+    cd "$(npm config get prefix)/lib/node_modules/@jessety/pm2-logrotate/" || exit
     pm2 install . --silent
     pm2 save --force
 
