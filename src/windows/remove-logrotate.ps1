@@ -3,10 +3,10 @@ Write-Host "=== Remove Log Rotation ==="
 if (Get-Command "pm2" -ErrorAction SilentlyContinue) {
 
   # Delete the running module
-  pm2 delete pm2-logrotate --silent
+  pm2 delete @jessety/pm2-logrotate --silent
 
   # Uninstall the module
-  pm2 uninstall pm2-logrotate --silent
+  pm2 uninstall @jessety/pm2-logrotate --silent
 
 } else {
 
