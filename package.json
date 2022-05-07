@@ -1,6 +1,6 @@
 {
   "name": "pm2-installer",
-  "version": "3.3.2",
+  "version": "3.4.0",
   "description": "Install pm2 offline as a service on Windows or Linux",
   "license": "MIT",
   "author": "Jesse Youngblood",
