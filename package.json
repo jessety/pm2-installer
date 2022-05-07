@@ -54,8 +54,8 @@
     "pm2": "5.1.2"
   },
   "devDependencies": {
-    "@jessety/eslint-config": "^1.0.5",
+    "@jessety/eslint-config": "^1.0.8",
     "editorconfig-checker": "^4.0.2",
-    "eslint": "^6.8.0"
+    "eslint": "^8.14.0"
   }
 }
