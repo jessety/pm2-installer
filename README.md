@@ -79,7 +79,7 @@ npm run configure-policy
 npm run setup
 ```
 
-> NOTE: In case you got error **.ps1 is not digitally designed**, this is caused by the files was blocked because downloaded from the internet. Fix this issue by unblock it, or simply `PS> dir *.ps1 -Path ".\src\windows\" -Recurse | Unblock-File` with Elevated (Administrator) Powershell. 
+> NOTE: In case you got error **.ps1 is not digitally signed**, this is caused by the PS1 files under `/src/windows` folder was blocked because its downloaded from the internet. Fix this issue by unblock it, or simply `PS> dir *.ps1 -Path ".\src\windows\" -Recurse | Unblock-File` with Elevated (Administrator) Powershell. 
 
 ## Removal
 
