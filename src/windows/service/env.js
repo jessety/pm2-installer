@@ -1,13 +1,12 @@
 'use strict';
 
+const { execSync } = require('child_process');
 const path = require('path');
 const process = require('process');
-const { execSync } = require('child_process');
 
 // Load all the ENV values we need
 
 function installDirectory() {
-
   const key = 'PM2_INSTALL_DIRECTORY';
 
   let value = process.env[key];
@@ -21,7 +20,9 @@ function installDirectory() {
   const { stdout, stderr } = execSync('npm config get prefix --global');
 
   if (stderr.trim() !== '') {
-    console.log(`$env:${key} is blank, and we can't estimate the location manually.`);
+    console.log(
+      `$env:${key} is blank, and we can't estimate the location manually.`,
+    );
     throw new Error(stderr.trim());
   }
 
@@ -35,7 +36,6 @@ function installDirectory() {
 }
 
 function homeDirectory() {
-
   const key = 'PM2_HOME';
 
   let value = process.env[key];
@@ -54,7 +54,6 @@ function homeDirectory() {
 }
 
 function serviceDirectory() {
-
   const key = 'PM2_SERVICE_DIRECTORY';
 
   let value = process.env[key];
