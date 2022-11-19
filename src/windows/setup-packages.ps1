@@ -37,7 +37,7 @@ if ($? -eq $True) {
   Write-Host "Installing packages took $([Math]::Floor($(Get-Date).Subtract($PriorToInstall).TotalSeconds)) seconds."
 
   Write-Host "Linking node-windows.."
-  npm link node-windows --loglevel=error --no-fund --no-audit --production --only=production
+  npm link node-windows --loglevel=error --no-fund --no-audit --production --only=production --omit=dev
 
 } elseif ((Test-Path $cache_archive_tar) -or (Test-Path $cache_archive_zip) -or (Test-Path $cache_folder)) {
 
@@ -113,7 +113,7 @@ if ($? -eq $True) {
   Write-Host "Installing packages took $([Math]::Floor($(Get-Date).Subtract($PriorToInstall).TotalSeconds)) seconds."
 
   Write-Host "Linking node-windows.."
-  npm link node-windows --loglevel=error --no-fund --no-audit --production --only=production --offline
+  npm link node-windows --loglevel=error --no-fund --no-audit --production --only=production --offline --omit=dev
 
 } else {
 
@@ -126,7 +126,7 @@ if ($? -eq $True) {
   npm install --global --loglevel=error --no-audit --no-fund $node_windows_package
 
   Write-Host "Linking node-windows.."
-  npm link node-windows --loglevel=error --no-fund --no-audit --production --only=production
+  npm link node-windows --loglevel=error --no-fund --no-audit --production --only=production --omit=dev
 }
 
 # Enable execution of pm2's powershell script, so the current user can interact with the pm2 powershell script
