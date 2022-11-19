@@ -46,7 +46,8 @@
     "remove": "node ./src/tools/script-for-os.js",
     "remove:windows": "PowerShell -NoProfile -ExecutionPolicy Bypass src\\windows\\remove.ps1",
     "remove:unix": "bash ./src/unix/remove.sh",
-    "remove:default": "echo 'ERROR: Could not detect host platform'"
+    "remove:default": "echo 'ERROR: Could not detect host platform'",
+    "format": "sort-package-json && prettier --write '**/*.{ts,js,mjs,cjs,json,yml,md}' && eslint --fix ."
   },
   "dependencies": {
     "@jessety/pm2-logrotate": "^2.7.1",
@@ -54,8 +55,11 @@
     "pm2": "5.2.0"
   },
   "devDependencies": {
-    "@jessety/eslint-config": "^1.0.8",
+    "@jessety/eslint-config": "^2.4.0",
+    "@jessety/prettier-config": "^1.2.0",
     "editorconfig-checker": "^4.0.2",
-    "eslint": "^8.14.0"
+    "eslint": "^8.28.0",
+    "prettier": "^2.7.1",
+    "sort-package-json": "^2.1.0"
   }
 }
