@@ -5,21 +5,27 @@ console.log(`service-management\\uninstall Uninstalling`);
 try {
   require('node-windows');
 } catch (error) {
-  console.error('Could not load "node-windows", likely because it has already been uninstalled.');
+  console.error(
+    'Could not load "node-windows", likely because it has already been uninstalled.',
+  );
   process.exit(0);
 }
 
-const path = require('path');
 const { Service } = require('node-windows');
+const path = require('path');
 
 // Create a "Service" object
 
 let [directory, user, name, description] = process.argv.slice(2);
 
-// Pull the process directory, service name, and service description from the script parameters or pricess env, or use a default
-directory = directory || process.env.PM2_SERVICE_DIRECTORY || 'c:\\ProgramData\\pm2\\service\\';
+// Pull the process directory, service name, and service description from the script parameters or process env, or use a default
+directory =
+  directory ||
+  process.env.PM2_SERVICE_DIRECTORY ||
+  'c:\\ProgramData\\pm2\\service\\';
 name = name || process.env.PM2_SERVICE_NAME || 'PM2';
-description = description || process.env.PM2_SERVICE_DESCRIPTION || 'Node process manager';
+description =
+  description || process.env.PM2_SERVICE_DESCRIPTION || 'Node process manager';
 
 const service = new Service({
   name,
@@ -27,13 +33,12 @@ const service = new Service({
   workingDirectory: directory,
   script: path.join(directory, 'index.js'),
   nodeOptions: ['--harmony'],
-  stopparentfirst: true
+  stopparentfirst: true,
 });
 
 console.log(`Uninstalling service "${name}" at "${directory}"`);
 
 if (typeof user === 'string' && user !== '') {
-
   service.logOnAs.account = user;
   service.logOnAs.password = ''; // This is left intentionally blank
 
@@ -43,7 +48,7 @@ if (typeof user === 'string' && user !== '') {
 // Remove the service
 
 // If an error occurs, print it and exit 1
-service.on('error', error => {
+service.on('error', (error) => {
   console.error(error);
   process.exit(1);
 });

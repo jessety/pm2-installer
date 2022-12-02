@@ -5,7 +5,7 @@ node src\tools\npm-online.js
 
 if ($? -eq $True) {
 
-  $logrotate_package = "$(node src/tools/echo-dependency.js @jessety/pm2-logrotate)"
+  $logrotate_package = "$(node src/tools/dependencies/echo.js @jessety/pm2-logrotate)"
 
   Write-Host "Installing $logrotate_package online.."
 

@@ -4,14 +4,16 @@ about: Suggest an idea for this project
 title: ''
 labels: ''
 assignees: ''
-
 ---
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is.
+## Is your feature request related to a problem? Please describe
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+<!-- A clear and concise description of what the problem is. -->
 
-**Additional context**
-Add any other context about the feature request here.
+## Describe the solution you'd like
+
+<!-- A clear and concise description of what you want to happen. -->
+
+## Additional context
+
+<!-- Add any other context about the feature request here. -->

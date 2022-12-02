@@ -7,3 +7,5 @@ RELEASE.md
 bundle.json
 bundle.tar.gz
 bundle.zip
+package.dependencies.json
+package.devDependencies.json

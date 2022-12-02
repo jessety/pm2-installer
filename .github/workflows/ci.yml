@@ -3,7 +3,6 @@ name: ci
 on: [push]
 
 jobs:
-
   lint:
     runs-on: ubuntu-latest
     steps:
@@ -12,7 +11,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: 14.x
+          node-version: 18.x
       - name: Install development dependencies
         run: npm install --only=dev
       - name: Lint

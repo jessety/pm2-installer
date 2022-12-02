@@ -4,31 +4,24 @@ const fs = require('fs');
 const path = require('path');
 
 // Pull references to the console functions, because PM2 replaces the global console object after we start it
-const {
-  log: consoleLog,
-  warn: consoleWarn,
-  error: consoleError
-} = console;
+const { log: consoleLog, warn: consoleWarn, error: consoleError } = console;
 
 /**
  * Flatten parameters of any type into a string
  * @param  {...any} params
  */
 function flatten(...params) {
-
-  const flattened = params.map(item => {
-
+  const flattened = params.map((item) => {
     if (['string', 'boolean', 'number'].includes(typeof item)) {
       return item;
     }
 
     if (item instanceof Error) {
-
       item = {
         ...item,
         message: item.message,
         stack: item.stack,
-        name: item.name
+        name: item.name,
       };
     }
 
@@ -49,7 +42,6 @@ function flatten(...params) {
  * @param  {...any} out
  */
 function write(type = 'LOG', date = true, ...out) {
-
   const { PM2_SERVICE_DIRECTORY } = process.env;
 
   if (PM2_SERVICE_DIRECTORY === undefined || PM2_SERVICE_DIRECTORY === '') {
