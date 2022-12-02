@@ -2,8 +2,8 @@
 
 echo "=== Setup ==="
 
-pm2_package=$(node src/tools/echo-dependency.js pm2)
-pm2_logrotate_package=$(node src/tools/echo-dependency.js @jessety/pm2-logrotate)
+pm2_package=$(node src/tools/dependencies/echo.js pm2)
+pm2_logrotate_package=$(node src/tools/dependencies/echo.js @jessety/pm2-logrotate)
 
 cache_folder="./.npm_cache";
 cache_archive="./bundle.tar.gz"

@@ -2,9 +2,9 @@ Write-Host "=== Install Packages ==="
 
 $Epoch = Get-Date
 
-$pm2_package = "$(node src/tools/echo-dependency.js pm2)"
-$pm2_logrotate_package = "$(node src/tools/echo-dependency.js @jessety/pm2-logrotate)"
-$node_windows_package = "$(node src/tools/echo-dependency.js node-windows)"
+$pm2_package = "$(node src/tools/dependencies/echo.js pm2)"
+$pm2_logrotate_package = "$(node src/tools/dependencies/echo.js @jessety/pm2-logrotate)"
+$node_windows_package = "$(node src/tools/dependencies/echo.js node-windows)"
 
 $cache_folder = ".\.npm_cache"
 $cache_archive_tar = ".\bundle.tar.gz"
@@ -106,14 +106,26 @@ if ($? -eq $True) {
 
   $PriorToInstall = Get-Date
 
+  Write-Host "Installing $pm2_package.."
   npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error --no-audit --no-fund $pm2_package
+  Write-Host "Installing $pm2_logrotate_package.."
   npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error --no-audit --no-fund $pm2_logrotate_package
+  Write-Host "Installing $node_windows_package.."
   npm install --global --offline --cache $cache_folder --shrinkwrap false --loglevel=error --no-audit --no-fund $node_windows_package
 
   Write-Host "Installing packages took $([Math]::Floor($(Get-Date).Subtract($PriorToInstall).TotalSeconds)) seconds."
 
+  # Strip dependencies from package.json
+  # This is because `node link` fails while attempting to install dev dependencies that aren't cached when offline
+  Write-Host "Stripping dependencies..."
+  node src\tools\dependencies\strip.js
+
   Write-Host "Linking node-windows.."
   npm link node-windows --loglevel=error --no-fund --no-audit --production --only=production --offline --omit=dev
+
+  # Restore dependencies to package.json
+  Write-Host "Restoring dependencies..."
+  node src\tools\dependencies\restore.js
 
 } else {
 

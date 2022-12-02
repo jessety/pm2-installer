@@ -1,6 +1,6 @@
 {
   "name": "pm2-installer",
-  "version": "3.4.0",
+  "version": "3.4.1-BETA-7",
   "description": "Install pm2 offline as a service on Windows or Linux",
   "homepage": "https://github.com/jessety/pm2-installer#readme",
   "bugs": {
@@ -34,7 +34,8 @@
     "info": "node ./src/bundle-info/current.js",
     "info-config": "PowerShell -NoProfile -ExecutionPolicy Bypass src\\windows\\info-config.ps1",
     "info-service": "PowerShell -NoProfile -ExecutionPolicy Bypass src\\windows\\info-service.ps1",
-    "preinstall": "echo WARNING: Running install in this project is not necessary. See README.",
+    "preinstall": "echo WARNING: Running install in this project is not necessary to install or bundle pm2. See README.",
+    "postinstall": "echo WARNING: Running install in this project is not necessary to install or bundle pm2. See README.",
     "lint": "eslint . && editorconfig-checker .",
     "remove": "node ./src/tools/script-for-os.js",
     "remove:default": "echo 'ERROR: Could not detect host platform'",
@@ -52,7 +53,7 @@
   "dependencies": {
     "@jessety/pm2-logrotate": "^2.7.1",
     "node-windows": "1.0.0-beta.6",
-    "pm2": "5.2.0"
+    "pm2": "5.2.2"
   },
   "devDependencies": {
     "@jessety/eslint-config": "^2.4.0",
