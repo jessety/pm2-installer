@@ -71,13 +71,20 @@ There are a couple additional challenges when installing on a fresh Windows mach
 
 `pm2-installer` includes two additional scripts to automatically fix the above issues. Invoking `npm run configure` will create the `C:\ProgramData\npm\`, and set `npm` to use `prefix` and `cache` locations in that directory. Running `npm run configure-policy` checks the machine's PowerShell execution policy and if it is either `undefined` or `Restricted`, updates it to `RemoteSigned`.
 
-Open an elevated terminal (e.g. right click and select "Run as Admin") and run the following commands:
+Open an elevated terminal (e.g. right click and select "Run as Admin") and run the following commands first:
 
 ```pwsh
 npm run configure
 npm run configure-policy
-npm run setup
 ```
+
+Then, run `npm run setup` to install the pm2 service.
+
+#### Additional context for Windows installations
+
+- The `pm2` service runs as the `Local Service` user. To interact with `pm2`, you need to use an elevated terminal (e.g. right click and select "Run as Admin") before running any commands that interface with the service, e.g. `pm2 list`.
+- If you update node and npm, make sure to either manually re-configure your npm & node installations or run `npm run configure` again.
+- This project does not currently support nvm for windows. It requires a standard node installation.
 
 ## Removal
 
