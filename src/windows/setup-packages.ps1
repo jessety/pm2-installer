@@ -116,7 +116,7 @@ if ($? -eq $True) {
   Write-Host "Installing packages took $([Math]::Floor($(Get-Date).Subtract($PriorToInstall).TotalSeconds)) seconds."
 
   # Strip dependencies from package.json
-  # This is because `node link` fails while attempting to install dev dependencies that aren't cached when offline
+  # This is because `npm link` fails while attempting to install dev dependencies that aren't cached when offline
   Write-Host "Stripping dependencies..."
   node src\tools\dependencies\strip.js
 
