@@ -16,7 +16,7 @@ const path = require('path');
 
 // Create a "Service" object
 
-let [directory, user, name, description] = process.argv.slice(2);
+let [directory, name, description, user] = process.argv.slice(2);
 
 // Pull the process directory, service name, and service description from the script parameters or process env, or use a default
 directory =
