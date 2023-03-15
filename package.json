@@ -53,7 +53,7 @@
   "dependencies": {
     "@jessety/pm2-logrotate": "^2.7.1",
     "node-windows": "1.0.0-beta.6",
-    "pm2": "5.2.2"
+    "pm2": "5.3.0"
   },
   "devDependencies": {
     "@jessety/eslint-config": "^2.4.0",
