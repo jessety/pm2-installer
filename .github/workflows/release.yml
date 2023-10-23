@@ -16,7 +16,7 @@ jobs:
           fetch-depth: 0 # Git history won't be fetched without this option
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
 
       - name: Generate release notes # To change the release notes format, edit RELEASE.md.hbs
         id: notes
